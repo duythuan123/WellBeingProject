@@ -40,7 +40,6 @@ namespace WellMeetAPI.Controllers
         }
 
         [HttpPost("create")]
-        [Authorize]
         public async Task<IActionResult> create([FromBody] UserRequestModel request)
         {
             var result = await _userService.AddAsync(request);

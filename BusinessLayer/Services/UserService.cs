@@ -186,13 +186,14 @@ namespace BusinessLayer.Services
 
             // Generate a reset token
             var token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
-            var tokenExpiration = DateTime.UtcNow.AddMinutes(1);
+            var tokenExpiration = DateTime.UtcNow.AddMinutes(10);
             await _repo.SavePasswordResetTokenAsync(user, token, tokenExpiration);
 
             // Create the reset URL(none for now)
 
             // Send the email
             string body = "Here is your token for reset password: " + token;
+
             try
             {
                 await _smtp.SendEmailAsync(user.Email, "Password Reset", body);
