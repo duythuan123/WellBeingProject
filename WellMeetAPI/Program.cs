@@ -11,6 +11,16 @@ builder.Services.InstallService(builder.Configuration);
 builder.Services.ConfigureSwaggerServices("WellMeetAPI");
 // JWT config
 builder.Services.AddJwtAuthentication(builder.Configuration);
+// Add Cors
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy",
+        builder => builder
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowAnyOrigin()  
+    );
+});
 
 var app = builder.Build();
 
