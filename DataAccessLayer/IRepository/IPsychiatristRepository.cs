@@ -10,5 +10,7 @@ namespace DataAccessLayer.IRepository
     public interface IPsychiatristRepository
     {
         Task<Psychiatrist> GetPsychiatristById(int id);
+
+        Task UpdatePsychiatristAsync(Psychiatrist psychiatrist, int id);
     }
 }

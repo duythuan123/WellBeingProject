@@ -1,18 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataAccessLayer.Entities
 {
-    public class Psychiatrist
+    public partial class Psychiatrist
     {
+        public Psychiatrist()
+        {
+            Bookings = new HashSet<Booking>();
+        }
+
         public int Id { get; set; }
-        public string Fullname { get; set; }
-        public string Email { get; set; }
-        public string Phonenumber { get; set; }
-        public string Specialization { get; set; }
-        public ICollection<Booking> Bookings { get; set; }
+        public string Specialization { get; set; } = null!;
+        public int UserId { get; set; }
+        public string? Bio { get; set; }
+        public string? Experience { get; set; }
+        public string? Location { get; set; }
+
+        public virtual User? User { get; set; }
+        public virtual ICollection<Booking> Bookings { get; set; }
     }
 }
