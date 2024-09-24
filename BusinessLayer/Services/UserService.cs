@@ -12,6 +12,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Reflection;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -31,7 +32,7 @@ namespace BusinessLayer.Services
             _repo = repo;
             _smtp = smtp;
         }
-        public async Task<BaseResponseModel<TokenModel>> LoginAsync(LoginRequestModel request)
+        public async Task<BaseResponseModel<LoginResponseModel>> LoginAsync(LoginRequestModel request)
         {
             var user = await _repo.GetUserByEmailAsync(request.Email);
 
@@ -39,33 +40,47 @@ namespace BusinessLayer.Services
             {
                 string token = GenerateJwtToken(user);
 
-                return new BaseResponseModel<TokenModel>()
+                return new BaseResponseModel<LoginResponseModel>()
                 {
                     Code = 200,
                     Message = "Login Success",
-                    Data = new TokenModel()
+                    Data = new LoginResponseModel()
                     {
-                        Token = token,
+                        Token = new TokenModel()
+                        {
+                            Token = token
+                        }, 
+
+                        User = new UserResponseModel()
+                        {
+                            Fullname = user.Fullname,
+                            Email = user.Email,
+                            DateOfBirth = user.DateOfBirth,
+                            Phonenumber = user.Phonenumber,
+                            Address = user.Address,
+                            Gender = user.Gender
+                        },
                     },
                 };
             }
-            return new BaseResponseModel<TokenModel>()
+            return new BaseResponseModel<LoginResponseModel>()
             {
                 Code = 500,
                 Message = "Username or Password incorrect",
-                Data = new TokenModel()
+                Data = new LoginResponseModel()
                 {
                     Token = null,
+                    User = null
                 },
             };
         }
-        public async Task<BaseResponseModel<User>> AddAsync(UserRequestModel request)
+        public async Task<BaseResponseModel<UserResponseModel>> AddAsync(UserRequestModel request)
         {
             //Check if user is existed (base on email)
             var existedUser = await _repo.GetUserByEmailAsync(request.Email);
             if (existedUser != null)
             {
-                return new BaseResponseModel<User>
+                return new BaseResponseModel<UserResponseModel>
                 {
                     Code = 500,
                     Message = "User already exists",
@@ -89,7 +104,7 @@ namespace BusinessLayer.Services
                 await _repo.AddUserAsync(newUser);
             }catch (Exception ex)
             {
-                return new BaseResponseModel<User>
+                return new BaseResponseModel<UserResponseModel>
                 {
                     Code = 500,
                     Message = ex.Message,
@@ -97,20 +112,28 @@ namespace BusinessLayer.Services
                 };
             }
 
-            return new BaseResponseModel<User>
+            return new BaseResponseModel<UserResponseModel>
             {
                 Code = 200,
                 Message = "User Created Success",
-                Data = newUser
+                Data = new UserResponseModel()
+                {
+                        Fullname = newUser.Fullname,
+                        Email = newUser.Email,
+                        DateOfBirth = newUser.DateOfBirth,
+                        Phonenumber = newUser.Phonenumber,
+                        Address = newUser.Address,
+                        Gender = newUser.Gender
+                },
             };
         }
-        public async Task<BaseResponseModel<User>> UpdateAsync(UserRequestModelForUpdate request, int id)
+        public async Task<BaseResponseModel<UserResponseModel>> UpdateAsync(UserRequestModelForUpdate request, int id)
         {
             //Check if user is existed (base on id)
             var existedUser = await _repo.GetUserById(id);
             if (existedUser == null)
             {
-                return new BaseResponseModel<User>
+                return new BaseResponseModel<UserResponseModel>
                 {
                     Code = 500,
                     Message = "User not exists",
@@ -135,7 +158,7 @@ namespace BusinessLayer.Services
             }
             catch (Exception ex)
             {
-                return new BaseResponseModel<User>
+                return new BaseResponseModel<UserResponseModel>
                 {
                     Code = 500,
                     Message = ex.Message,
@@ -143,20 +166,28 @@ namespace BusinessLayer.Services
                 };
             }
 
-            return new BaseResponseModel<User>
+            return new BaseResponseModel<UserResponseModel>
             {
                 Code = 200,
                 Message = "User Updated Success",
-                Data = existedUser
+                Data = new UserResponseModel()
+                {
+                    Fullname = existedUser.Fullname,
+                    Email = existedUser.Email,
+                    DateOfBirth = existedUser.DateOfBirth,
+                    Phonenumber = existedUser.Phonenumber,
+                    Address = existedUser.Address,
+                    Gender = existedUser.Gender
+                },
             };
         }
-        public async Task<BaseResponseModel<User>> GetDetailAsync(int id)
+        public async Task<BaseResponseModel<UserResponseModel>> GetDetailAsync(int id)
         {
             //Check if user is existed (base on id)
             var existedUser = await _repo.GetUserById(id);
             if (existedUser == null)
             {
-                return new BaseResponseModel<User>
+                return new BaseResponseModel<UserResponseModel>
                 {
                     Code = 500,
                     Message = "User not exists",
@@ -164,11 +195,19 @@ namespace BusinessLayer.Services
                 };
             }
 
-            return new BaseResponseModel<User>
+            return new BaseResponseModel<UserResponseModel>
             {
                 Code = 200,
                 Message = "Get User Detail Success",
-                Data = existedUser
+                Data = new UserResponseModel()
+                {
+                    Fullname = existedUser.Fullname,
+                    Email = existedUser.Email,
+                    DateOfBirth = existedUser.DateOfBirth,
+                    Phonenumber = existedUser.Phonenumber,
+                    Address = existedUser.Address,
+                    Gender = existedUser.Gender
+                },
             };
         }
 
