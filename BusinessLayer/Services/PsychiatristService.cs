@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Models.Request;
+﻿using BusinessLayer.IServices;
+using BusinessLayer.Models.Request;
 using BusinessLayer.Models.Response;
 using BusinessLayer.Utilities;
 using DataAccessLayer.Entities;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Services
 {
-    public class PsychiatristService
+    public class PsychiatristService: IPsychiatristService
     {
         private readonly IConfiguration _configuration;
         private readonly IPsychiatristRepository _pRepo;
