@@ -28,6 +28,7 @@ namespace WellMeetAPI.AppStarts
 
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IBookingService, BookingService>();
+            services.AddScoped<IPsychiatristService, PsychiatristService>();
             services.AddScoped<SendEmailSMTPServices>();
             
         }
