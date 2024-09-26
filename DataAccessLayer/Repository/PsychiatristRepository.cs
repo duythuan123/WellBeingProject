@@ -19,6 +19,13 @@ namespace DataAccessLayer.Repository
             _context = context;
         }
 
+        public async Task<IEnumerable<Psychiatrist>> GetAllPsychiatristsAsync()
+        {
+            return await _context.Psychiatrists
+                .Include(p => p.User) // Bao gồm thông tin người dùng nếu cần
+                .ToListAsync(); // Lấy tất cả bác sĩ tâm lý
+        }
+
         public async Task<Psychiatrist> GetPsychiatristById(int id)
         {
             return await _context.Psychiatrists.FirstOrDefaultAsync(u => u.Id == id);
@@ -27,8 +34,22 @@ namespace DataAccessLayer.Repository
         public async Task<Psychiatrist> GetPsychiatristByUserId(int userId)
         {
             return await _context.Psychiatrists
-                .Include(p => p.User)  // Include bảng User nếu có quan hệ trong model
+                .Include(p => p.User)
                 .FirstOrDefaultAsync(p => p.UserId == userId);
+        }
+
+        public async Task<Psychiatrist> GetPsychiatristByEmail(string email)
+        {
+            return await _context.Psychiatrists
+                .Include(p => p.User)
+                .FirstOrDefaultAsync(p => p.User.Email == email);
+        }
+
+        public async Task<Psychiatrist> GetPsychiatristByPhoneNumber(string phoneNumber)
+        {
+            return await _context.Psychiatrists
+                .Include(p => p.User)
+                .FirstOrDefaultAsync(p => p.User.Phonenumber == phoneNumber);
         }
 
         public async Task UpdatePsychiatristAsync(Psychiatrist psychiatrist, int userId)

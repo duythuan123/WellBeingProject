@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.IServices;
 using BusinessLayer.Models.Request;
+using BusinessLayer.Models.Response;
 using BusinessLayer.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,13 @@ namespace WellMeetAPI.Controllers
         {
             _psychiatristService = psychiatristService;
 
+        }
+
+        [HttpGet("getlist")]
+        public async Task<ActionResult<BaseResponseModel<IEnumerable<PsychiatristResponseModel>>>> GetAllPsychiatrists()
+        {
+            var response = await _psychiatristService.GetAllPsychiatristsAsync();
+            return StatusCode((int)response.Code, response);
         }
 
         [HttpGet("{userId}")]
