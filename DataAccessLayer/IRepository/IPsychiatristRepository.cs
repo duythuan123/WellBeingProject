@@ -11,6 +11,7 @@ namespace DataAccessLayer.IRepository
     {
         Task<Psychiatrist> GetPsychiatristById(int id);
 
-        Task UpdatePsychiatristAsync(Psychiatrist psychiatrist, int id);
+        Task<Psychiatrist> GetPsychiatristByUserId(int userId);
+        Task UpdatePsychiatristAsync(Psychiatrist psychiatrist, int userId);
     }
 }
