@@ -11,6 +11,7 @@ namespace BusinessLayer.IServices
 {
     public interface IPsychiatristService
     {
-        Task<BaseResponseModel<Psychiatrist>> UpdatePsychiatristAsync(PsychiatristRequestModelForUpdate request, int id);
+        Task<BaseResponseModel<PsychiatristResponseModel>> GetPsychiatristDetailAsync(int userId);
+        Task<BaseResponseModel<PsychiatristResponseModel>> UpdatePsychiatristAsync(PsychiatristRequestModelForUpdate request, int userId);
     }
 }
