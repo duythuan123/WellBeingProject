@@ -12,6 +12,7 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace BusinessLayer.Services
@@ -28,6 +29,34 @@ namespace BusinessLayer.Services
             _pRepo = repo;
         }
 
+        //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        public async Task<BaseResponseModel<IEnumerable<PsychiatristResponseModel>>> GetAllPsychiatristsAsync()
+        {
+            var psychiatrists = await _pRepo.GetAllPsychiatristsAsync();
+
+            var response = psychiatrists.Select(p => new PsychiatristResponseModel
+            {
+                Fullname = p.User.Fullname,
+                Email = p.User.Email,
+                DateOfBirth = p.User.DateOfBirth,
+                Phonenumber = p.User.Phonenumber,
+                Address = p.User.Address,
+                Gender = p.User.Gender,
+                Bio = p.Bio,
+                Specialization = p.Specialization,
+                Experience = p.Experience,
+                Location = p.Location
+            }).ToList();
+
+            return new BaseResponseModel<IEnumerable<PsychiatristResponseModel>>
+            {
+                Code = 200,
+                Message = "Get all psychiatrists success!",
+                Data = response
+            };
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         public async Task<BaseResponseModel<PsychiatristResponseModel>> GetPsychiatristDetailAsync(int userId)
         {
             // Kiểm tra xem Psychiatrist có tồn tại không
@@ -37,7 +66,7 @@ namespace BusinessLayer.Services
                 return new BaseResponseModel<PsychiatristResponseModel>
                 {
                     Code = 500,
-                    Message = "Psychiatrist not exists",
+                    Message = "Psychiatrist not exists!",
                     Data = null
                 };
             }
@@ -46,7 +75,7 @@ namespace BusinessLayer.Services
             return new BaseResponseModel<PsychiatristResponseModel>
             {
                 Code = 200,
-                Message = "Get Psychiatrist Detail Success",
+                Message = "Get psychiatrist detail success!",
                 Data = new PsychiatristResponseModel()
                 {
                     Fullname = existedPsychiatrist.User.Fullname,
@@ -64,21 +93,69 @@ namespace BusinessLayer.Services
             };
         }
 
-
+        ///-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         public async Task<BaseResponseModel<PsychiatristResponseModel>> UpdatePsychiatristAsync(PsychiatristRequestModelForUpdate request, int userId)
         {
+            // Kiểm tra xem Psychiatrist có tồn tại không
             var existedPsychiatrist = await _pRepo.GetPsychiatristByUserId(userId);
             if (existedPsychiatrist == null)
             {
                 return new BaseResponseModel<PsychiatristResponseModel>
                 {
                     Code = 500,
-                    Message = "Psychiatrist not exists",
+                    Message = "Psychiatrist not exists!",
                     Data = null
                 };
             }
 
-            // Cập nhật thông tin từ UpdateModel
+            // Kiểm tra định dạng email
+            if (string.IsNullOrEmpty(request.Email) ||
+                !Regex.IsMatch(request.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+            {
+                return new BaseResponseModel<PsychiatristResponseModel>
+                {
+                    Code = 400,
+                    Message = "Invalid email format!",
+                    Data = null
+                };
+            }
+
+            // Kiểm tra định dạng số điện thoại
+            if (string.IsNullOrEmpty(request.Phonenumber) ||
+                !Regex.IsMatch(request.Phonenumber, @"^\d{10}$")) 
+            {
+                return new BaseResponseModel<PsychiatristResponseModel>
+                {
+                    Code = 400,
+                    Message = "Invalid phone number format!",
+                    Data = null
+                };
+            }
+
+            // Kiểm tra trùng email 
+            var existingEmailPsychiatrist = await _pRepo.GetPsychiatristByEmail(request.Email);
+            if (existingEmailPsychiatrist != null && existingEmailPsychiatrist.UserId != userId)
+            {
+                return new BaseResponseModel<PsychiatristResponseModel>
+                {
+                    Code = 400,
+                    Message = "Email already in use by another user!",
+                    Data = null
+                };
+            }
+
+            //Kiểm tra trùng số điện thoại
+            var existingPhonePsychiatrist = await _pRepo.GetPsychiatristByPhoneNumber(request.Phonenumber);
+            if (existingPhonePsychiatrist != null && existingPhonePsychiatrist.UserId != userId)
+            {
+                return new BaseResponseModel<PsychiatristResponseModel>
+                {
+                    Code = 400,
+                    Message = "Phone number already in use by another user!",
+                    Data = null
+                };
+            }
+
             existedPsychiatrist.User.Fullname = request.Fullname ?? existedPsychiatrist.User.Fullname;
             existedPsychiatrist.User.Email = request.Email ?? existedPsychiatrist.User.Email;
             existedPsychiatrist.User.Phonenumber = request.Phonenumber ?? existedPsychiatrist.User.Phonenumber;
@@ -91,12 +168,11 @@ namespace BusinessLayer.Services
             existedPsychiatrist.Location = request.Location ?? existedPsychiatrist.Location;
 
             await _pRepo.UpdatePsychiatristAsync(existedPsychiatrist, userId);
-            // Trả về response
             
             return new BaseResponseModel<PsychiatristResponseModel>
             {
                 Code = 200,
-                Message = "Update Psychiatrist Success",
+                Message = "Update psychiatrist success!",
                 Data = new PsychiatristResponseModel
                 {
                     Fullname = existedPsychiatrist.User.Fullname,
