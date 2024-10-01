@@ -17,9 +17,10 @@ namespace DataAccessLayer.Context
             : base(options)
         {
         }
-            
+
         public virtual DbSet<Booking> Bookings { get; set; } = null!;
         public virtual DbSet<Psychiatrist> Psychiatrists { get; set; } = null!;
+        public virtual DbSet<TimeSlot> TimeSlots { get; set; } = null!;
         public virtual DbSet<Token> Tokens { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
 
@@ -56,11 +57,23 @@ namespace DataAccessLayer.Context
 
             modelBuilder.Entity<Psychiatrist>(entity =>
             {
+                entity.Property(e => e.ConsultationFee).HasColumnType("decimal(10, 2)");
+
                 entity.Property(e => e.Location).IsUnicode(false);
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Psychiatrists)
                     .HasForeignKey(d => d.UserId);
+            });
+
+            modelBuilder.Entity<TimeSlot>(entity =>
+            {
+                entity.Property(e => e.DateOfWeek).HasMaxLength(50);
+
+                entity.HasOne(d => d.Psychiatrist)
+                    .WithMany(p => p.TimeSlots)
+                    .HasForeignKey(d => d.PsychiatristId)
+                    .HasConstraintName("FK__TimeSlot__Psychi__0B91BA14");
             });
 
             modelBuilder.Entity<Token>(entity =>

@@ -19,13 +19,10 @@ namespace BusinessLayer.Services
 {
     public class PsychiatristService : IPsychiatristService
     {
-        private readonly IConfiguration _configuration;
         private readonly IPsychiatristRepository _pRepo;
-        private readonly IUserRepository _uRepo;
 
-        public PsychiatristService(IConfiguration configuration, IPsychiatristRepository repo)
+        public PsychiatristService(IPsychiatristRepository repo)
         {
-            _configuration = configuration;
             _pRepo = repo;
         }
 

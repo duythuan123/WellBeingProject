@@ -9,34 +9,34 @@ namespace WellMeetAPI.Controllers
 {
     public class PsychiatristController : Controller
     {
-        private readonly IPsychiatristService _psychiatristService;
+        private readonly IPsychiatristService _pService;
 
         public PsychiatristController(IPsychiatristService psychiatristService) 
         {
-            _psychiatristService = psychiatristService;
+            _pService = psychiatristService;
 
         }
 
         [HttpGet("getlist")]
         public async Task<ActionResult<BaseResponseModel<IEnumerable<PsychiatristResponseModel>>>> GetAllPsychiatrists()
         {
-            var response = await _psychiatristService.GetAllPsychiatristsAsync();
+            var response = await _pService.GetAllPsychiatristsAsync();
             return StatusCode((int)response.Code, response);
         }
 
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetPsychiatristByUserId(int userId)
         {
-            var result = await _psychiatristService.GetPsychiatristDetailAsync(userId);
+            var result = await _pService.GetPsychiatristDetailAsync(userId);
 
             return StatusCode((int)result.Code, result);
         }
 
-        [HttpPut("update/{id}")]
+        [HttpPut("update/{userId}")]
         [Authorize]
         public async Task<IActionResult> UpdatePsychiatristProfile([FromBody] PsychiatristRequestModelForUpdate request, int id)
         {
-            var result = await _psychiatristService.UpdatePsychiatristAsync(request, id);
+            var result = await _pService.UpdatePsychiatristAsync(request, id);
 
             return StatusCode((int)result.Code, result);
         }
