@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccessLayer.Migrations
 {
-    [DbContext(typeof(AppDbContext))]
+    [DbContext(typeof(WellMeetDbContext))]
     [Migration("20240830053536_AddTokenEntity")]
     partial class AddTokenEntity
     {

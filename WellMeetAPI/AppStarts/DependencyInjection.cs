@@ -18,7 +18,7 @@ namespace WellMeetAPI.AppStarts
                 options.LowercaseQueryStrings = true;
             });
 
-            services.AddDbContext<AppDbContext> (options =>
+            services.AddDbContext<WellMeetDbContext> (options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });

@@ -12,9 +12,9 @@ namespace DataAccessLayer.Repository
 {
     public class PsychiatristRepository : IPsychiatristRepository
     {
-        private readonly AppDbContext _context;
+        private readonly WellMeetDbContext _context;
 
-        public PsychiatristRepository(AppDbContext context)
+        public PsychiatristRepository(WellMeetDbContext context)
         {
             _context = context;
         }

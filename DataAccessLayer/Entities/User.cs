@@ -20,6 +20,7 @@ namespace DataAccessLayer.Entities
         public string Phonenumber { get; set; } = null!;
         public string Address { get; set; } = null!;
         public string Gender { get; set; } = null!;
+        public byte[]? ProfileImage { get; set; }
 
         public virtual ICollection<Booking> Bookings { get; set; }
         public virtual ICollection<Psychiatrist> Psychiatrists { get; set; }

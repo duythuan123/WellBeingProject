@@ -11,9 +11,9 @@ namespace DataAccessLayer.Repository
 {
     public class BookingRepository : IBookingRepositoy
     {
-        private readonly AppDbContext _context;
+        private readonly WellMeetDbContext _context;
 
-        public BookingRepository(AppDbContext context)
+        public BookingRepository(WellMeetDbContext context)
         {
             _context = context;
         }

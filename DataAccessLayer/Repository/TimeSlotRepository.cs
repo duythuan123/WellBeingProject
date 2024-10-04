@@ -12,9 +12,9 @@ namespace DataAccessLayer.Repository
 {
     public class TimeSlotRepository : ITimeSlotRepository
     {
-        private readonly AppDbContext _context;
+        private readonly WellMeetDbContext _context;
 
-        public TimeSlotRepository(AppDbContext context)
+        public TimeSlotRepository(WellMeetDbContext context)
         {
             _context = context;
         }

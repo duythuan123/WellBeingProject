@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using DataAccessLayer.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.Extensions.Configuration;
 
 namespace DataAccessLayer.Context
 {
-    public partial class AppDbContext : DbContext
+    public partial class WellMeetDbContext : DbContext
     {
-        public AppDbContext()
+        public WellMeetDbContext()
         {
         }
 
-        public AppDbContext(DbContextOptions<AppDbContext> options)
+        public WellMeetDbContext(DbContextOptions<WellMeetDbContext> options)
             : base(options)
         {
         }
@@ -25,25 +24,18 @@ namespace DataAccessLayer.Context
         public virtual DbSet<User> Users { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-          => optionsBuilder.UseSqlServer(GetConnectionString());
-
-        string GetConnectionString()
         {
-            IConfiguration builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", true, true)
-                .Build();
-            return builder["ConnectionStrings:DefaultConnection"];
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("server =localhost; database =WellMeetDb;uid=sa;pwd=12345;Trusted_Connection=True;TrustServerCertificate=True");
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Booking>(entity =>
             {
-                entity.HasIndex(e => e.PsychiatristId, "IX_Booking_PsychiatristId");
-
-                entity.HasIndex(e => e.UserId, "IX_Booking_UserId");
-
                 entity.HasOne(d => d.Psychiatrist)
                     .WithMany(p => p.Bookings)
                     .HasForeignKey(d => d.PsychiatristId)
@@ -73,13 +65,11 @@ namespace DataAccessLayer.Context
                 entity.HasOne(d => d.Psychiatrist)
                     .WithMany(p => p.TimeSlots)
                     .HasForeignKey(d => d.PsychiatristId)
-                    .HasConstraintName("FK__TimeSlot__Psychi__0B91BA14");
+                    .HasConstraintName("FK__TimeSlots__Psych__4222D4EF");
             });
 
             modelBuilder.Entity<Token>(entity =>
             {
-                entity.HasIndex(e => e.UserId, "IX_Tokens_UserId");
-
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Tokens)
                     .HasForeignKey(d => d.UserId);

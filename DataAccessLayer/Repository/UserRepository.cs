@@ -12,9 +12,9 @@ namespace DataAccessLayer.Repository
 {
     public class UserRepository : IUserRepository
     {
-        private readonly AppDbContext _context;
+        private readonly WellMeetDbContext _context;
 
-        public UserRepository(AppDbContext context)
+        public UserRepository(WellMeetDbContext context)
         {
             _context = context;
         }
