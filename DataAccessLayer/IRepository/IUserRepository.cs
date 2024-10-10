@@ -9,6 +9,7 @@ namespace DataAccessLayer.IRepository
 {
     public interface IUserRepository
     {
+        Task<IEnumerable<User>> GetAllUsersAsync(string searchTerm);
         Task<User> GetUserByEmailAsync(string email);
         Task<User> GetUserById(int id);
         Task AddUserAsync(User user);

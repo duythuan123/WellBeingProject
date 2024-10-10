@@ -54,6 +54,8 @@ namespace DataAccessLayer.Repository
                 existingUser.Phonenumber = user.Phonenumber;
                 existingUser.Address = user.Address;
                 existingUser.Gender = user.Gender;
+                existingUser.Role = user.Role;
+                existingUser.UserImage = user.UserImage;
 
                 // Mark the existing customer entity as modified
                 _context.Entry(existingUser).State = EntityState.Modified;
@@ -103,6 +105,20 @@ namespace DataAccessLayer.Repository
                 .FirstOrDefaultAsync(t => t.PasswordResetToken == token && t.PasswordResetTokenExpiration > DateTime.UtcNow);
 
             return tokenEntity?.User;
+        }
+
+        public async Task<IEnumerable<User>> GetAllUsersAsync(string searchTerm)
+        {
+            //searchTerm is null or empty return all users
+            if (string.IsNullOrEmpty(searchTerm))
+            {
+                return await _context.Users.ToListAsync();
+            }
+
+            //filter users by Fullname or Email
+            return await _context.Users
+                .Where(u => u.Fullname.Contains(searchTerm) || u.Email.Contains(searchTerm))
+                .ToListAsync();
         }
     }
 }

@@ -15,6 +15,8 @@ namespace BusinessLayer.Models.Request
         public string Phonenumber { get; set; }
         public string Address { get; set; }
         public string Gender { get; set; }
+        public string? Role { get; set; }
+        public string? UserImage { get; set; }
     }
 
     public class UserRequestModelForUpdate
@@ -25,6 +27,8 @@ namespace BusinessLayer.Models.Request
         public string Phonenumber { get; set; }
         public string Address { get; set; }
         public string Gender { get; set; }
+        public string? Role { get; set; }
+        public string? UserImage { get; set; }
     }
 
     public class UserRequestModelForForgotPassword

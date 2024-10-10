@@ -1,4 +1,5 @@
-﻿using BusinessLayer.IServices;
+﻿using AutoMapper;
+using BusinessLayer.IServices;
 using BusinessLayer.Models.Request;
 using BusinessLayer.Models.Response;
 using BusinessLayer.Utilities;
@@ -25,20 +26,22 @@ namespace BusinessLayer.Services
         private readonly IConfiguration _configuration;
         private readonly IUserRepository _repo;
         private readonly SendEmailSMTPServices _smtp;
+        private readonly IMapper _mapper;
 
-        public UserService(IConfiguration configuration, IUserRepository repo, SendEmailSMTPServices smtp)
+        public UserService(IConfiguration configuration, IUserRepository repo, SendEmailSMTPServices smtp, IMapper mapper)
         {
             _configuration = configuration;
             _repo = repo;
             _smtp = smtp;
+            _mapper = mapper;
         }
         public async Task<BaseResponseModel<LoginResponseModel>> LoginAsync(LoginRequestModel request)
         {
             var user = await _repo.GetUserByEmailAsync(request.Email);
 
-            if (user != null && VerifyPassword(request.Password, user.Password))
+            if (user != null && Helper.VerifyPassword(request.Password, user.Password))
             {
-                string token = GenerateJwtToken(user);
+                string token = Helper.GenerateJwtToken(user, _configuration);
 
                 return new BaseResponseModel<LoginResponseModel>()
                 {
@@ -49,17 +52,9 @@ namespace BusinessLayer.Services
                         Token = new TokenModel()
                         {
                             Token = token
-                        }, 
-
-                        User = new UserResponseModel()
-                        {
-                            Fullname = user.Fullname,
-                            Email = user.Email,
-                            DateOfBirth = user.DateOfBirth,
-                            Phonenumber = user.Phonenumber,
-                            Address = user.Address,
-                            Gender = user.Gender
                         },
+
+                        User = _mapper.Map<UserResponseModel>(user)
                     },
                 };
             }
@@ -88,16 +83,7 @@ namespace BusinessLayer.Services
                 };
             }
 
-            var newUser = new User()
-            {
-                Fullname = request.Fullname,
-                Password = HashPassword(request.Password),
-                Email = request.Email,
-                DateOfBirth = request.DateOfBirth,
-                Phonenumber = request.Phonenumber,
-                Address = request.Address,
-                Gender = request.Gender
-            };
+            var newUser = _mapper.Map<User>(request);
 
             try
             {
@@ -116,15 +102,7 @@ namespace BusinessLayer.Services
             {
                 Code = 200,
                 Message = "User Created Success",
-                Data = new UserResponseModel()
-                {
-                        Fullname = newUser.Fullname,
-                        Email = newUser.Email,
-                        DateOfBirth = newUser.DateOfBirth,
-                        Phonenumber = newUser.Phonenumber,
-                        Address = newUser.Address,
-                        Gender = newUser.Gender
-                },
+                Data = _mapper.Map<UserResponseModel>(newUser)
             };
         }
         public async Task<BaseResponseModel<UserResponseModel>> UpdateAsync(UserRequestModelForUpdate request, int id)
@@ -141,16 +119,7 @@ namespace BusinessLayer.Services
                 };
             }
 
-            var editingUser = new User()
-            {
-                Fullname = request.Fullname,
-                ///No edit for Password///
-                Email = request.Email,
-                DateOfBirth = request.DateOfBirth,
-                Phonenumber = request.Phonenumber,
-                Address = request.Address,
-                Gender = request.Gender
-            };
+            var editingUser = _mapper.Map<User>(request);
 
             try
             {
@@ -170,15 +139,7 @@ namespace BusinessLayer.Services
             {
                 Code = 200,
                 Message = "User Updated Success",
-                Data = new UserResponseModel()
-                {
-                    Fullname = existedUser.Fullname,
-                    Email = existedUser.Email,
-                    DateOfBirth = existedUser.DateOfBirth,
-                    Phonenumber = existedUser.Phonenumber,
-                    Address = existedUser.Address,
-                    Gender = existedUser.Gender
-                },
+                Data = _mapper.Map<UserResponseModel>(existedUser)
             };
         }
         public async Task<BaseResponseModel<UserResponseModel>> GetDetailAsync(int id)
@@ -199,15 +160,7 @@ namespace BusinessLayer.Services
             {
                 Code = 200,
                 Message = "Get User Detail Success",
-                Data = new UserResponseModel()
-                {
-                    Fullname = existedUser.Fullname,
-                    Email = existedUser.Email,
-                    DateOfBirth = existedUser.DateOfBirth,
-                    Phonenumber = existedUser.Phonenumber,
-                    Address = existedUser.Address,
-                    Gender = existedUser.Gender
-                },
+                Data = _mapper.Map<UserResponseModel>(existedUser)
             };
         }
 
@@ -265,7 +218,7 @@ namespace BusinessLayer.Services
                 };
             }
 
-            user.Password = HashPassword(newPassword);
+            user.Password = Helper.HashPassword(newPassword);
 
             await _repo.UpdatePasswordAsync(user, user.Id);
 
@@ -276,65 +229,27 @@ namespace BusinessLayer.Services
             };
         }
 
-        private string GenerateJwtToken(User user)
+        public async Task<BaseResponseModel<IEnumerable<UserResponseModel>>> GetAllUsersAsync(string searchTerm)
         {
-            var jwtSettings = _configuration.GetSection("JwtSettings");
-            var key = Encoding.ASCII.GetBytes(jwtSettings["SecretKey"]);
+            var users = await _repo.GetAllUsersAsync(searchTerm);
+            var userResponseModels = _mapper.Map<IEnumerable<UserResponseModel>>(users);
 
-            var tokenDescriptor = new SecurityTokenDescriptor
+            if (users.Count() == 0)
             {
-                Subject = new ClaimsIdentity(new[]
+                return new BaseResponseModel<IEnumerable<UserResponseModel>>
                 {
-                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new Claim(ClaimTypes.Email, user.Email),
-                    new Claim(ClaimTypes.Name, user.Fullname)
-                }),
-                Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                    Code = 200,
+                    Message = "No Users match your search term",
+                    Data = userResponseModels
+                };
+            }
+
+            return new BaseResponseModel<IEnumerable<UserResponseModel>>
+            {
+                Code = 200,
+                Message = "Users retrieved successfully",
+                Data = userResponseModels
             };
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
         }
-        private string HashPassword(string password)
-        {
-            byte[] salt = new byte[16];
-            using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(salt);
-            }
-
-            var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 10000);
-            byte[] hash = pbkdf2.GetBytes(20);
-
-            byte[] hashBytes = new byte[36];
-            Array.Copy(salt, 0, hashBytes, 0, 16);
-            Array.Copy(hash, 0, hashBytes, 16, 20);
-            string hashedPassword = Convert.ToBase64String(hashBytes);
-
-            return hashedPassword;
-        }
-        private bool VerifyPassword(string password, string hashedPassword)
-        {
-            byte[] hashBytes = Convert.FromBase64String(hashedPassword);
-            byte[] salt = new byte[16];
-            Array.Copy(hashBytes, 0, salt, 0, 16);
-            byte[] hash = new byte[20];
-            Array.Copy(hashBytes, 16, hash, 0, 20);
-
-            var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 10000);
-            byte[] computedHash = pbkdf2.GetBytes(20);
-
-            for (int i = 0; i < 20; i++)
-            {
-                if (hash[i] != computedHash[i])
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-        
     }
 }

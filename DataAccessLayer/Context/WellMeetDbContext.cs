@@ -75,6 +75,11 @@ namespace DataAccessLayer.Context
                     .HasForeignKey(d => d.UserId);
             });
 
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.Property(e => e.Role).HasMaxLength(50);
+            });
+
             OnModelCreatingPartial(modelBuilder);
         }
 

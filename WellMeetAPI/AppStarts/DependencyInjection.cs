@@ -22,6 +22,9 @@ namespace WellMeetAPI.AppStarts
             {
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });
+            // AutoMapper
+            services.AddAutoMapper(typeof(MappingProfileExtension));
+
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IBookingRepositoy, BookingRepository>();
             services.AddScoped<IPsychiatristRepository, PsychiatristRepository>();

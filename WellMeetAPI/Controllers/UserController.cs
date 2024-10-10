@@ -11,7 +11,7 @@ using System.Text;
 
 namespace WellMeetAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -30,7 +30,23 @@ namespace WellMeetAPI.Controllers
             return StatusCode((int)result.Code, result);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("getAllBy/{searchTerm}")]
+        public async Task<IActionResult> GetAllByTerm(string searchTerm)
+        {
+            var result = await _userService.GetAllUsersAsync(searchTerm);
+
+            return StatusCode((int)result.Code, result);
+        }
+
+        [HttpGet("getAll")]
+        public async Task<IActionResult> GetAll()
+        {
+            var result = await _userService.GetAllUsersAsync(null);
+
+            return StatusCode((int)result.Code, result);
+        }
+
+        [HttpGet("GetBy/{id}")]
         [Authorize]
         public async Task<IActionResult> getDetail(int id)
         {
