@@ -17,7 +17,8 @@ namespace DataAccessLayer.Context
         {
         }
 
-        public virtual DbSet<Booking> Bookings { get; set; } = null!;
+        public virtual DbSet<Appointment> Appointments { get; set; } = null!;
+        public virtual DbSet<Payment> Payments { get; set; } = null!;
         public virtual DbSet<Psychiatrist> Psychiatrists { get; set; } = null!;
         public virtual DbSet<TimeSlot> TimeSlots { get; set; } = null!;
         public virtual DbSet<Token> Tokens { get; set; } = null!;
@@ -34,17 +35,40 @@ namespace DataAccessLayer.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Booking>(entity =>
+            modelBuilder.Entity<Appointment>(entity =>
             {
+                entity.ToTable("Appointment");
+
+                entity.HasOne(d => d.Payment)
+                    .WithMany(p => p.Appointments)
+                    .HasForeignKey(d => d.PaymentId)
+                    .HasConstraintName("FK_Appointment_Payment");
+
                 entity.HasOne(d => d.Psychiatrist)
-                    .WithMany(p => p.Bookings)
+                    .WithMany(p => p.Appointments)
                     .HasForeignKey(d => d.PsychiatristId)
                     .HasConstraintName("FK_Booking_Psychiatrist_PsychiatristId");
 
                 entity.HasOne(d => d.User)
-                    .WithMany(p => p.Bookings)
+                    .WithMany(p => p.Appointments)
                     .HasForeignKey(d => d.UserId)
                     .HasConstraintName("FK_Booking_Users_UserId");
+            });
+
+            modelBuilder.Entity<Payment>(entity =>
+            {
+                entity.ToTable("Payment");
+
+                entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");
+
+                entity.Property(e => e.PaymentDate).HasColumnType("datetime");
+
+                entity.Property(e => e.PaymentStatus).HasMaxLength(50);
+
+                entity.HasOne(d => d.Appointment)
+                    .WithMany(p => p.Payments)
+                    .HasForeignKey(d => d.AppointmentId)
+                    .HasConstraintName("FK_Payment_Appointment");
             });
 
             modelBuilder.Entity<Psychiatrist>(entity =>

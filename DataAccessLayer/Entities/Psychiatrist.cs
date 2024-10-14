@@ -7,7 +7,7 @@ namespace DataAccessLayer.Entities
     {
         public Psychiatrist()
         {
-            Bookings = new HashSet<Booking>();
+            Appointments = new HashSet<Appointment>();
             TimeSlots = new HashSet<TimeSlot>();
         }
 
@@ -20,7 +20,7 @@ namespace DataAccessLayer.Entities
         public decimal? ConsultationFee { get; set; }
 
         public virtual User? User { get; set; }
-        public virtual ICollection<Booking> Bookings { get; set; }
+        public virtual ICollection<Appointment> Appointments { get; set; }
         public virtual ICollection<TimeSlot> TimeSlots { get; set; }
     }
 }

@@ -7,7 +7,7 @@ namespace DataAccessLayer.Entities
     {
         public User()
         {
-            Bookings = new HashSet<Booking>();
+            Appointments = new HashSet<Appointment>();
             Psychiatrists = new HashSet<Psychiatrist>();
             Tokens = new HashSet<Token>();
         }
@@ -23,7 +23,7 @@ namespace DataAccessLayer.Entities
         public string? Role { get; set; }
         public string? UserImage { get; set; }
 
-        public virtual ICollection<Booking> Bookings { get; set; }
+        public virtual ICollection<Appointment> Appointments { get; set; }
         public virtual ICollection<Psychiatrist> Psychiatrists { get; set; }
         public virtual ICollection<Token> Tokens { get; set; }
     }

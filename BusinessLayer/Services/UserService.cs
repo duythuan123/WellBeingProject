@@ -229,9 +229,9 @@ namespace BusinessLayer.Services
             };
         }
 
-        public async Task<BaseResponseModel<IEnumerable<UserResponseModel>>> GetAllUsersAsync(string searchTerm)
+        public async Task<BaseResponseModel<IEnumerable<UserResponseModel>>> GetAllUsersAsync()
         {
-            var users = await _repo.GetAllUsersAsync(searchTerm);
+            var users = await _repo.GetAllUsersAsync();
             var userResponseModels = _mapper.Map<IEnumerable<UserResponseModel>>(users);
 
             if (users.Count() == 0)
@@ -249,6 +249,38 @@ namespace BusinessLayer.Services
                 Code = 200,
                 Message = "Users retrieved successfully",
                 Data = userResponseModels
+            };
+        }
+
+        public async Task<BaseResponseModel> DeleteAsync(int id)
+        {
+            var user = await _repo.GetUserById(id);
+            if (user == null)
+            {
+                return new BaseResponseModel
+                {
+                    Code = 404,
+                    Message = "User not found",
+                };
+            }
+
+            try
+            {
+                await _repo.DeleteUserAsync(id);
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponseModel
+                {
+                    Code = 500,
+                    Message = ex.Message,
+                };
+            }
+
+            return new BaseResponseModel
+            {
+                Code = 200,
+                Message = "User is Deleted Successfully",
             };
         }
     }

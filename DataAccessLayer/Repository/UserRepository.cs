@@ -40,7 +40,7 @@ namespace DataAccessLayer.Repository
             var existingUser = await _context.Users.FindAsync(id);
             var existingEmail = await _context.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
 
-            if(existingEmail != null && existingUser.Email != user.Email)
+            if (existingEmail != null && existingUser.Email != user.Email)
             {
                 throw new Exception("Email is existed");
             }
@@ -64,6 +64,13 @@ namespace DataAccessLayer.Repository
                 _context.SaveChanges();
             }
 
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteUserAsync(int id)
+        {
+            var existingUser = await _context.Users.FindAsync(id);
+            _context.Users.Remove(existingUser);
             await _context.SaveChangesAsync();
         }
 
@@ -107,18 +114,12 @@ namespace DataAccessLayer.Repository
             return tokenEntity?.User;
         }
 
-        public async Task<IEnumerable<User>> GetAllUsersAsync(string searchTerm)
+        public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
-            //searchTerm is null or empty return all users
-            if (string.IsNullOrEmpty(searchTerm))
-            {
-                return await _context.Users.ToListAsync();
-            }
 
-            //filter users by Fullname or Email
-            return await _context.Users
-                .Where(u => u.Fullname.Contains(searchTerm) || u.Email.Contains(searchTerm))
-                .ToListAsync();
+            return await _context.Users.ToListAsync();
         }
+
+
     }
 }

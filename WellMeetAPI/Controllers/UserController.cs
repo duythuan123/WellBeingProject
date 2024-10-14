@@ -30,18 +30,10 @@ namespace WellMeetAPI.Controllers
             return StatusCode((int)result.Code, result);
         }
 
-        [HttpGet("getAllBy/{searchTerm}")]
-        public async Task<IActionResult> GetAllByTerm(string searchTerm)
-        {
-            var result = await _userService.GetAllUsersAsync(searchTerm);
-
-            return StatusCode((int)result.Code, result);
-        }
-
         [HttpGet("getAll")]
         public async Task<IActionResult> GetAll()
         {
-            var result = await _userService.GetAllUsersAsync(null);
+            var result = await _userService.GetAllUsersAsync();
 
             return StatusCode((int)result.Code, result);
         }
@@ -83,6 +75,13 @@ namespace WellMeetAPI.Controllers
         public async Task<IActionResult> resetPassword([FromBody] UserRequestModelForChangePassword request)
         {
             var result = await _userService.ResetPasswordAsync(request.Token, request.NewPassword);
+            return StatusCode((int)result.Code, result);
+        }
+
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> delete(int id)
+        {
+            var result = await _userService.DeleteAsync(id);
             return StatusCode((int)result.Code, result);
         }
     }
