@@ -16,7 +16,6 @@ namespace BusinessLayer.Models.Request
         public string? Location { get; set; }
 
         public virtual User? User { get; set; }
-        public virtual ICollection<Booking> Bookings { get; set; }
     }
 
     public class PsychiatristRequestModelForUpdate
