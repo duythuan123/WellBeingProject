@@ -14,7 +14,7 @@ namespace BusinessLayer.IServices
         Task<BaseResponseModel<IEnumerable<UserResponseModel>>> GetAllUsersAsync();
         Task<BaseResponseModel<LoginResponseModel>> LoginAsync(LoginRequestModel request);
         Task<BaseResponseModel<UserResponseModel>> AddAsync(UserRequestModel request);
-        Task<BaseResponseModel<UserResponseModel>> UpdateAsync(UserRequestModelForUpdate user, int id);
+        Task<BaseResponseModel<UserResponseModel>> UpdateAsync(UserRequestModelForUpdate request, int id);
         Task<BaseResponseModel> DeleteAsync(int id);
         Task<BaseResponseModel<UserResponseModel>> GetDetailAsync(int id);
         Task<BaseResponseModel> ForgotPasswordAsync(string email);

@@ -28,12 +28,13 @@ namespace WellMeetAPI.AppStarts
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IPsychiatristRepository, PsychiatristRepository>();
             services.AddScoped<ITimeSlotRepository, TimeSlotRepository>();
+            services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPsychiatristService, PsychiatristService>();
             services.AddScoped<ITimeSlotService, TimeSlotService>();
             services.AddScoped<SendEmailSMTPServices>();
-            
+            services.AddScoped<IAppointmentService, AppointmentService>();
         }
     }
 }

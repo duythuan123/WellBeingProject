@@ -35,34 +35,9 @@ namespace DataAccessLayer.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateUserAsync(User user, int id)
+        public async Task UpdateUserAsync(User user)
         {
-            var existingUser = await _context.Users.FindAsync(id);
-            var existingEmail = await _context.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
-
-            if (existingEmail != null && existingUser.Email != user.Email)
-            {
-                throw new Exception("Email is existed");
-            }
-
-            if (existingUser != null)
-            {
-                // Update
-                existingUser.Fullname = user.Fullname;
-                existingUser.Email = user.Email;
-                existingUser.DateOfBirth = user.DateOfBirth;
-                existingUser.Phonenumber = user.Phonenumber;
-                existingUser.Address = user.Address;
-                existingUser.Gender = user.Gender;
-                existingUser.Role = user.Role;
-                existingUser.UserImage = user.UserImage;
-
-                // Mark the existing customer entity as modified
-                _context.Entry(existingUser).State = EntityState.Modified;
-
-                // Save the changes
-                _context.SaveChanges();
-            }
+            _context.Users.Update(user);
 
             await _context.SaveChangesAsync();
         }

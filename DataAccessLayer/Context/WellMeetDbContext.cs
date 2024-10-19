@@ -49,6 +49,11 @@ namespace DataAccessLayer.Context
                     .HasForeignKey(d => d.PsychiatristId)
                     .HasConstraintName("FK_Booking_Psychiatrist_PsychiatristId");
 
+                entity.HasOne(d => d.TimeSlot)
+                    .WithMany(p => p.Appointments)
+                    .HasForeignKey(d => d.TimeSlotId)
+                    .HasConstraintName("FK_Appointment_TimeSlot");
+
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Appointments)
                     .HasForeignKey(d => d.UserId)
@@ -85,6 +90,8 @@ namespace DataAccessLayer.Context
             modelBuilder.Entity<TimeSlot>(entity =>
             {
                 entity.Property(e => e.DateOfWeek).HasMaxLength(50);
+
+                entity.Property(e => e.Status).HasMaxLength(50);
 
                 entity.HasOne(d => d.Psychiatrist)
                     .WithMany(p => p.TimeSlots)

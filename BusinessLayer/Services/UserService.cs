@@ -60,7 +60,7 @@ namespace BusinessLayer.Services
             }
             return new BaseResponseModel<LoginResponseModel>()
             {
-                Code = 500,
+                Code = 400,
                 Message = "Username or Password incorrect",
                 Data = new LoginResponseModel()
                 {
@@ -77,7 +77,7 @@ namespace BusinessLayer.Services
             {
                 return new BaseResponseModel<UserResponseModel>
                 {
-                    Code = 500,
+                    Code = 400,
                     Message = "User already exists",
                     Data = null
                 };
@@ -113,17 +113,17 @@ namespace BusinessLayer.Services
             {
                 return new BaseResponseModel<UserResponseModel>
                 {
-                    Code = 500,
+                    Code = 404,
                     Message = "User not exists",
                     Data = null
                 };
             }
 
-            var editingUser = _mapper.Map<User>(request);
+            _mapper.Map(request, existedUser);
 
             try
             {
-                await _repo.UpdateUserAsync(editingUser, id);
+                await _repo.UpdateUserAsync(existedUser);
             }
             catch (Exception ex)
             {
@@ -150,7 +150,7 @@ namespace BusinessLayer.Services
             {
                 return new BaseResponseModel<UserResponseModel>
                 {
-                    Code = 500,
+                    Code = 404,
                     Message = "User not exists",
                     Data = null
                 };
@@ -213,7 +213,7 @@ namespace BusinessLayer.Services
             {
                 return new BaseResponseModel
                 {
-                    Code = 500,
+                    Code = 400,
                     Message = "Invalid or expired token",
                 };
             }
@@ -239,7 +239,7 @@ namespace BusinessLayer.Services
                 return new BaseResponseModel<IEnumerable<UserResponseModel>>
                 {
                     Code = 200,
-                    Message = "No Users match your search term",
+                    Message = "No Users in the server",
                     Data = userResponseModels
                 };
             }

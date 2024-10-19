@@ -19,6 +19,9 @@ namespace BusinessLayer.Utilities
             CreateMap<UserRequestModel, User>()
                 .ForMember(dest => dest.Password, opt => opt.MapFrom(src => Helper.HashPassword(src.Password)));
             CreateMap<UserRequestModelForUpdate, User>();
+            CreateMap<Appointment, AppointmentResponseModel>();
+            CreateMap<AppointmentRequestModel, Appointment>();
+            CreateMap<AppointmentRequestModelForUpdate, Appointment>();
         }
     }
 }

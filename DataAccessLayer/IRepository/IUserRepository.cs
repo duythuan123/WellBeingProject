@@ -13,7 +13,7 @@ namespace DataAccessLayer.IRepository
         Task<User> GetUserByEmailAsync(string email);
         Task<User> GetUserById(int id);
         Task AddUserAsync(User user);
-        Task UpdateUserAsync(User user, int id);
+        Task UpdateUserAsync(User user);
         Task DeleteUserAsync(int id);
         Task SavePasswordResetTokenAsync(User user, string token, DateTime expiration);
         Task<User> GetUserByPasswordResetTokenAsync(string token);

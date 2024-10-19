@@ -17,9 +17,11 @@ namespace DataAccessLayer.Entities
         public int UserId { get; set; }
         public int PsychiatristId { get; set; }
         public int? PaymentId { get; set; }
+        public int? TimeSlotId { get; set; }
 
         public virtual Payment? Payment { get; set; }
         public virtual Psychiatrist Psychiatrist { get; set; } = null!;
+        public virtual TimeSlot? TimeSlot { get; set; }
         public virtual User User { get; set; } = null!;
         public virtual ICollection<Payment> Payments { get; set; }
     }
