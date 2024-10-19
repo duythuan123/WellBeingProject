@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.IServices;
 using BusinessLayer.Models.Request;
+using BusinessLayer.Models.Response;
 using BusinessLayer.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +13,12 @@ namespace WellMeetAPI.Controllers
     {
 
         private readonly IAppointmentService _appointmentService;
+        private readonly IVnPayService _vnPayService;
 
-        public AppointmentController(IAppointmentService appointmentService)
+        public AppointmentController(IAppointmentService appointmentService, IVnPayService vnPayService)
         {
             _appointmentService = appointmentService;
+            _vnPayService = vnPayService;
         }
 
         [HttpGet("getAll")]
@@ -64,6 +67,29 @@ namespace WellMeetAPI.Controllers
         {
             var result = await _appointmentService.DeleteAsync(id);
             return StatusCode((int)result.Code, result);
+        }
+
+        [HttpPost("pay")]
+        public IActionResult CreatePaymentUrl(PaymentInformationModel model)
+        {
+            var url = _vnPayService.CreatePaymentUrl(model, HttpContext);
+
+            return Ok(url);
+        }
+        [HttpGet("paymentexcute")]
+        public IActionResult PaymentCallback()
+        {
+            var response = _vnPayService.PaymentExecute(Request.Query);
+
+            return Ok(response);
+        }
+
+        [HttpPost("addPayment")]
+        public async Task<IActionResult> createPayment(PaymentResponseModel request)
+        {
+            await _vnPayService.AddPaymentAsync(request);
+
+            return Ok("Payment Created");
         }
     }
 }

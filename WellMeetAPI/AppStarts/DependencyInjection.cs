@@ -35,6 +35,7 @@ namespace WellMeetAPI.AppStarts
             services.AddScoped<ITimeSlotService, TimeSlotService>();
             services.AddScoped<SendEmailSMTPServices>();
             services.AddScoped<IAppointmentService, AppointmentService>();
+            services.AddScoped<IVnPayService, VnPayService>();
         }
     }
 }

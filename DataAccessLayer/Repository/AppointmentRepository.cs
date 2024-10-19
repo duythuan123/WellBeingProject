@@ -43,6 +43,13 @@ namespace DataAccessLayer.Repository
         public async Task AddAsync(Appointment appointment)
         {
             _context.Appointments.Add(appointment);
+
+            var timeslot = await _context.TimeSlots.FindAsync(appointment.TimeSlotId);
+
+            timeslot.Status = "Booked";
+
+            _context.Entry(timeslot).State = EntityState.Modified;
+
             await _context.SaveChangesAsync();
         }
 
@@ -57,6 +64,12 @@ namespace DataAccessLayer.Repository
         {
             var existingAppointment = await _context.Appointments.FindAsync(id);
             _context.Appointments.Remove(existingAppointment);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AddPaymentAsync(Payment payment)
+        {
+            _context.Payments.Add(payment);
             await _context.SaveChangesAsync();
         }
     }

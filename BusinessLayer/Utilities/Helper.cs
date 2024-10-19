@@ -78,5 +78,25 @@ namespace BusinessLayer.Utilities
             }
             return true;
         }
+
+        public static decimal ExtractAmountFromOrderDescription(string orderDescription)
+        {
+            var words = orderDescription.Split(' ');
+            if (decimal.TryParse(words.Last(), out decimal amount))
+            {
+                return amount;
+            }
+            return 0;
+        }
+
+        public static int? ExtractAppointmentIdFromOrderDescription(string orderDescription)
+        {
+            var words = orderDescription.Split(' ');
+            if (int.TryParse(words.First(), out int appointmentId))
+            {
+                return appointmentId;
+            }
+            return null;
+        }
     }
 }

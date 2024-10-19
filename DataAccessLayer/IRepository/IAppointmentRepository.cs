@@ -16,5 +16,6 @@ namespace DataAccessLayer.IRepository
         Task AddAsync(Appointment appointment);
         Task UpdateAsync(Appointment appointment);
         Task DeleteAsync(int id);
+        Task AddPaymentAsync(Payment payment);
     }
 }
