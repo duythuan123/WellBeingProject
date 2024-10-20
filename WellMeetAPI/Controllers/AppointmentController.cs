@@ -87,9 +87,9 @@ namespace WellMeetAPI.Controllers
         [HttpPost("addPayment")]
         public async Task<IActionResult> createPayment(PaymentResponseModel request)
         {
-            await _vnPayService.AddPaymentAsync(request);
+            var result = await _vnPayService.AddPaymentAsync(request);
 
-            return Ok("Payment Created");
+            return StatusCode((int)result.Code, result);
         }
     }
 }

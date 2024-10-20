@@ -63,12 +63,51 @@ namespace BusinessLayer.Services
             return response;
         }
 
-        public async Task AddPaymentAsync(PaymentResponseModel request)
+        public async Task<BaseResponseModel<PaymentResponseModel>> AddPaymentAsync(PaymentResponseModel request)
         {
             var payment = _mapper.Map<Payment>(request);
 
+            var existedAppointment = await _repo.GetById((int)payment.AppointmentId);
+            if (existedAppointment == null)
+            {
+                return new BaseResponseModel<PaymentResponseModel>
+                {
+                    Code = 404,
+                    Message = "Appointment not exists",
+                    Data = null
+                };
+            }
+            
 
-            await _repo.AddPaymentAsync(payment);
+            try
+            {
+                await _repo.AddPaymentAsync(payment);
+
+                existedAppointment.PaymentId = payment.Id;
+
+                if (request.Success=true)
+                {
+                    existedAppointment.Status = "Paid";
+                }
+
+                await _repo.UpdateAsync(existedAppointment);
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponseModel<PaymentResponseModel>
+                {
+                    Code = 500,
+                    Message = ex.Message,
+                    Data = null
+                };
+            }
+
+            return new BaseResponseModel<PaymentResponseModel>
+            {
+                Code = 200,
+                Message = "Payment Created Success",
+                Data = request
+            };
 
         }
     }

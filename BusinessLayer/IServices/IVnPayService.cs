@@ -9,7 +9,6 @@ namespace BusinessLayer.IServices
     {
         string CreatePaymentUrl(PaymentInformationModel model, HttpContext context);
         PaymentResponseModel PaymentExecute(IQueryCollection collections);
-
-        Task AddPaymentAsync(PaymentResponseModel request);
+        Task<BaseResponseModel<PaymentResponseModel>> AddPaymentAsync(PaymentResponseModel request);
     }
 }

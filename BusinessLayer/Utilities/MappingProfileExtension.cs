@@ -25,7 +25,7 @@ namespace BusinessLayer.Utilities
             CreateMap<PaymentResponseModel, Payment>()
             .ForMember(dest => dest.Amount, opt => opt.MapFrom(src => Helper.ExtractAmountFromOrderDescription(src.OrderDescription)))
             .ForMember(dest => dest.PaymentDate, opt => opt.MapFrom(src => DateTime.Now))
-            .ForMember(dest => dest.PaymentStatus, opt => opt.MapFrom(src => src.Success ? "Paid" : "Failed"))
+            .ForMember(dest => dest.PaymentStatus, opt => opt.MapFrom(src => src.Success ? "Success" : "Failed"))
             .ForMember(dest => dest.AppointmentId, opt => opt.MapFrom(src => Helper.ExtractAppointmentIdFromOrderDescription(src.OrderDescription)));
         }
     }
