@@ -21,4 +21,13 @@ namespace BusinessLayer.Models.Request
         public TimeSpan EndTime { get; set; }
         public string? DateOfWeek { get; set; }
     }
+
+    public class TimeSlotModel
+    {
+        public int TimeSlotId { get; set; }
+        public TimeSpan StartTime { get; set; }
+        public TimeSpan EndTime { get; set; }
+        public string? DateOfWeek { get; set; }
+        public string PsychiatristName { get; set; }
+    }
 }

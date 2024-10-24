@@ -22,6 +22,13 @@ namespace WellMeetAPI.Controllers
             return StatusCode((int)response.Code, response);
         }
 
+        [HttpGet("gettimeslotbyid/{id}")]
+        public async Task<ActionResult<BaseResponseModel<TimeSlotResponseModel>>> GetTimeSlotByIdController(int id)
+        {
+            var response = await _tsService.GetTimeSlotByIdAsync(id);  // Gọi service để lấy TimeSlot theo ID
+            return StatusCode((int)response.Code, response);
+        }
+
         [HttpPost("{psychiatristId}")]
         public async Task<IActionResult> AddTimeSlotController([FromBody] TimeSlotRequestModel request, int psychiatristId)
         {

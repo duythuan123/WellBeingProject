@@ -13,4 +13,5 @@ namespace BusinessLayer.Models.Response
         public string? DateOfWeek { get; set; }
         public string PsychiatristName { get; set; }
     }
+
 }

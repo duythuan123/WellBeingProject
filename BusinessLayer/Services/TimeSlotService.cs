@@ -45,9 +45,34 @@ namespace BusinessLayer.Services
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        public async Task<TimeSlot?> GetTimeSlotByIdAsync(int id)
+        public async Task<BaseResponseModel<TimeSlotModel>> GetTimeSlotByIdAsync(int id)
         {
-            return await _tsRepo.GetTimeSlotByIdAsync(id);
+            var timeSlot = await _tsRepo.GetTimeSlotByIdAsync(id); // Giả sử _tsRepo là repository cho TimeSlot
+
+            if (timeSlot == null)
+            {
+                return new BaseResponseModel<TimeSlotModel>
+                {
+                    Code = 404,
+                    Message = "Time slot not found!",
+                    Data = null
+                };
+            }
+
+            var responseModel = new TimeSlotModel
+            {
+                TimeSlotId = timeSlot.TimeSlotId,
+                StartTime = timeSlot.StartTime,
+                EndTime = timeSlot.EndTime,
+                DateOfWeek = timeSlot.DateOfWeek,
+            };
+
+            return new BaseResponseModel<TimeSlotModel>
+            {
+                Code = 200,
+                Message = "Time slot found successfully!",
+                Data = responseModel
+            };
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
