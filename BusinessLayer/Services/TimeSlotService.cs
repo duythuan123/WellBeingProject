@@ -94,7 +94,7 @@ namespace BusinessLayer.Services
             }
 
             // Kiểm tra xem có TimeSlot nào trùng không
-            var existingTimeSlot = await _tsRepo.GetTimeSlotByDetailsAsync(request.StartTime, request.DateOfWeek, psychiatristId);
+            var existingTimeSlot = await _tsRepo.GetTimeSlotByDetailsAsync(request.StartTime, request.DateOfWeek, request.SlotDate, psychiatristId);
             if (existingTimeSlot != null)
             {
                 return new BaseResponseModel<TimeSlotResponseModel>
