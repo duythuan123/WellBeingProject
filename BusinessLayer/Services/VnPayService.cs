@@ -4,6 +4,7 @@ using BusinessLayer.Models.Request;
 using BusinessLayer.Models.Response;
 using BusinessLayer.Utilities;
 using DataAccessLayer.Entities;
+using DataAccessLayer.Enums;
 using DataAccessLayer.IRepository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -77,7 +78,6 @@ namespace BusinessLayer.Services
                     Data = null
                 };
             }
-            
 
             try
             {
@@ -87,8 +87,9 @@ namespace BusinessLayer.Services
 
                 if (request.Success=true)
                 {
-                    existedAppointment.Status = "Paid";
+                    existedAppointment.Status = AppointmentStatus.PAID.ToString();
                 }
+                
 
                 await _repo.UpdateAsync(existedAppointment);
             }

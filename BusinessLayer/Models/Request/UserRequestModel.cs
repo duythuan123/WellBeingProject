@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,7 @@ namespace BusinessLayer.Models.Request
         public string Phonenumber { get; set; }
         public string Address { get; set; }
         public string Gender { get; set; }
+        [DefaultValue("USER")]
         public string? Role { get; set; }
         public string? UserImage { get; set; }
     }
@@ -27,6 +29,7 @@ namespace BusinessLayer.Models.Request
         public string Phonenumber { get; set; }
         public string Address { get; set; }
         public string Gender { get; set; }
+        [DefaultValue("USER")]
         public string? Role { get; set; }
         public string? UserImage { get; set; }
     }
