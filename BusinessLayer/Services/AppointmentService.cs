@@ -4,6 +4,7 @@ using BusinessLayer.Models.Request;
 using BusinessLayer.Models.Response;
 using BusinessLayer.Utilities;
 using DataAccessLayer.Entities;
+using DataAccessLayer.Enums;
 using DataAccessLayer.IRepository;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -19,15 +20,29 @@ namespace BusinessLayer.Services
     {
         private readonly IAppointmentRepository _repo;
         private readonly IMapper _mapper;
+        private readonly ITimeSlotRepository _tsRepo;
 
-        public AppointmentService(IAppointmentRepository repo, IMapper mapper)
+        public AppointmentService(IAppointmentRepository repo, IMapper mapper, ITimeSlotRepository tsrepo, IAppointmentRepository appRepo)
         {
             _repo = repo;
             _mapper = mapper;
+            _tsRepo = tsrepo;
         }
-       
+
         public async Task<BaseResponseModel<AppointmentResponseModel>> AddAsync(AppointmentRequestModel request)
         {
+            var timeSlot = await _tsRepo.GetTimeSlotByIdAsync((int)request.TimeSlotId);
+
+            if (timeSlot.Status == TimeslotStatus.BOOKED.ToString())
+            {
+                return new BaseResponseModel<AppointmentResponseModel>
+                {
+                    Code = 404,
+                    Message = "Time slot is not in available status",
+                    Data = null
+                };
+            }
+
             var newAppointment = _mapper.Map<Appointment>(request);
 
             try
@@ -85,6 +100,48 @@ namespace BusinessLayer.Services
             {
                 Code = 200,
                 Message = "Appointment Updated Success",
+                Data = _mapper.Map<AppointmentResponseModel>(existedAppointment)
+            };
+        }
+
+        public async Task<BaseResponseModel<AppointmentResponseModel>> FinishAppointmentAsync(int id)
+        {
+            var existedAppointment = await _repo.GetById(id);
+            if (existedAppointment == null)
+            {
+                return new BaseResponseModel<AppointmentResponseModel>
+                {
+                    Code = 404,
+                    Message = "Appointment not exists",
+                    Data = null
+                };
+            }
+
+            var existedTimeslot = await _tsRepo.GetTimeSlotByIdAsync((int)existedAppointment.TimeSlotId);
+
+            existedTimeslot.Status = TimeslotStatus.AVAILABLE.ToString();
+            existedAppointment.Status = AppointmentStatus.COMPLETED.ToString();
+
+            try
+            {
+                await _repo.UpdateAsync(existedAppointment);
+                await _tsRepo.UpdateTimeSlotAsync(existedTimeslot);
+
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponseModel<AppointmentResponseModel>
+                {
+                    Code = 500,
+                    Message = ex.Message,
+                    Data = null
+                };
+            }
+
+            return new BaseResponseModel<AppointmentResponseModel>
+            {
+                Code = 200,
+                Message = "Appointment Finished Success",
                 Data = _mapper.Map<AppointmentResponseModel>(existedAppointment)
             };
         }
@@ -194,6 +251,7 @@ namespace BusinessLayer.Services
             try
             {
                 await _repo.DeleteAsync(id);
+
             }
             catch (Exception ex)
             {

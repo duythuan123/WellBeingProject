@@ -11,8 +11,11 @@ namespace BusinessLayer.Models.Request
     {
         public DateTime BookingDate { get; set; }
         public DateTime AppointmentDate { get; set; }
+        [DefaultValue("6")]
         public int UserId { get; set; }
+        [DefaultValue("2")]
         public int PsychiatristId { get; set; }
+        [DefaultValue("2")]
         public int? TimeSlotId { get; set; }
     }
 

@@ -29,6 +29,14 @@ namespace WellMeetAPI.Controllers
             return StatusCode((int)result.Code, result);
         }
 
+        [HttpGet("GetById/{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var result = await _appointmentService.GetByIdAsync(id);
+
+            return StatusCode((int)result.Code, result);
+        }
+
         [HttpGet("GetAllByUserId/{id}")]
         public async Task<IActionResult> GetAllByUserId(int id)
         {
@@ -58,6 +66,14 @@ namespace WellMeetAPI.Controllers
         public async Task<IActionResult> update([FromBody] AppointmentRequestModelForUpdate request, int id)
         {
             var result = await _appointmentService.UpdateAsync(request, id);
+
+            return StatusCode((int)result.Code, result);
+        }
+
+        [HttpPut("FinishAppointment/{id}")]
+        public async Task<IActionResult> finsih(int id)
+        {
+            var result = await _appointmentService.FinishAppointmentAsync(id);
 
             return StatusCode((int)result.Code, result);
         }
