@@ -14,7 +14,7 @@ namespace BusinessLayer.IServices
         Task<BaseResponseModel<IEnumerable<TimeSlotResponseModel>>> GetAllTimeSlotsAsync();
         Task<BaseResponseModel<TimeSlotModel>> GetTimeSlotByIdAsync(int id);
         Task<BaseResponseModel<TimeSlotResponseModel>> AddTimeSlotAsync(TimeSlotRequestModel request, int psychiatristId);
-        //Task<BaseResponseModel<TimeSlot>> UpdateTimeSlotAsync(TimeSlotRequestModelForUpdate request);
+        Task<BaseResponseModel<TimeSlotResponseModel>> UpdateTimeSlotAsync(TimeSlotRequestModel request, int timeSlotId);
         Task<BaseResponseModel<TimeSlot>> DeleteTimeSlotAsync(int timeSlotId);
 
     }

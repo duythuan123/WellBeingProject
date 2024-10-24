@@ -36,6 +36,12 @@ namespace WellMeetAPI.Controllers
             return StatusCode((int)response.Code, response);
         }
 
+        [HttpPut("updatetimeslot/{id}")]
+        public async Task<IActionResult> UpdateTimeSlotController([FromBody] TimeSlotRequestModel request, int id)
+        {
+            var response = await _tsService.UpdateTimeSlotAsync(request, id);
+            return StatusCode((int)response.Code, response);
+        }
 
         [HttpDelete("deletetimeslot/{id}")]
         public async Task<IActionResult> DeleteTimeSlot(int id)

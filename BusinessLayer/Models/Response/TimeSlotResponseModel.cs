@@ -11,6 +11,7 @@ namespace BusinessLayer.Models.Response
         public TimeSpan StartTime { get; set; }
         public TimeSpan EndTime { get; set; }
         public string? DateOfWeek { get; set; }
+        public DateTime? SlotDate { get; set; }
         public string PsychiatristName { get; set; }
     }
 

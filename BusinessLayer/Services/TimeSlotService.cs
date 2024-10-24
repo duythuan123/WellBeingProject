@@ -33,6 +33,7 @@ namespace BusinessLayer.Services
                 DateOfWeek = ts.DateOfWeek,
                 StartTime = ts.StartTime,
                 EndTime = ts.EndTime,
+                SlotDate = ts.SlotDate,
                 PsychiatristName = ts.Psychiatrist.User.Fullname,
             }).ToList();
 
@@ -64,6 +65,7 @@ namespace BusinessLayer.Services
                 TimeSlotId = timeSlot.TimeSlotId,
                 StartTime = timeSlot.StartTime,
                 EndTime = timeSlot.EndTime,
+                SlotDate = timeSlot.SlotDate,
                 DateOfWeek = timeSlot.DateOfWeek,
             };
 
@@ -129,7 +131,44 @@ namespace BusinessLayer.Services
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        public async Task<BaseResponseModel<TimeSlotResponseModel>> UpdateTimeSlotAsync(TimeSlotRequestModel request, int timeSlotId)
+        {
+            // Tìm TimeSlot theo ID
+            var timeSlot = await _tsRepo.GetTimeSlotByIdAsync(timeSlotId);
 
+            if (timeSlot == null)
+            {
+                return new BaseResponseModel<TimeSlotResponseModel>
+                {
+                    Code = 404,
+                    Message = "Time slot not found!",
+                    Data = null
+                };
+            }
+
+            // Cập nhật giá trị mới cho TimeSlot
+            timeSlot.StartTime = request.StartTime;
+            timeSlot.EndTime = request.EndTime;
+            timeSlot.DateOfWeek = request.DateOfWeek;
+
+            // Lưu thay đổi vào cơ sở dữ liệu
+            await _tsRepo.UpdateTimeSlotAsync(timeSlot);
+
+            return new BaseResponseModel<TimeSlotResponseModel>
+            {
+                Code = 200,
+                Message = "Time slot updated successfully!",
+                Data = new TimeSlotResponseModel
+                {
+                    StartTime = timeSlot.StartTime,
+                    EndTime = timeSlot.EndTime,
+                    DateOfWeek = timeSlot.DateOfWeek,
+                }
+            };
+        }
+
+
+        //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         public async Task<BaseResponseModel<TimeSlot>> DeleteTimeSlotAsync(int timeSlotId)
         {
             var timeSlot = await _tsRepo.GetTimeSlotByIdAsync(timeSlotId);  // Lấy đối tượng TimeSlot

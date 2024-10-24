@@ -12,6 +12,7 @@ namespace BusinessLayer.Models.Request
         public TimeSpan StartTime { get; set; }
         public TimeSpan EndTime { get; set; }
         public string? DateOfWeek { get; set; }
+        public DateTime? SlotDate { get; set; }
     }
 
     public class TimeSlotRequestModelForUpdate
@@ -20,6 +21,7 @@ namespace BusinessLayer.Models.Request
         public TimeSpan StartTime { get; set; }
         public TimeSpan EndTime { get; set; }
         public string? DateOfWeek { get; set; }
+        public DateTime? SlotDate { get; set; }
     }
 
     public class TimeSlotModel
@@ -28,6 +30,7 @@ namespace BusinessLayer.Models.Request
         public TimeSpan StartTime { get; set; }
         public TimeSpan EndTime { get; set; }
         public string? DateOfWeek { get; set; }
+        public DateTime? SlotDate { get; set; }
         public string PsychiatristName { get; set; }
     }
 }
