@@ -39,6 +39,7 @@ namespace BusinessLayer.Services
                 Phonenumber = p.User.Phonenumber,
                 Address = p.User.Address,
                 Gender = p.User.Gender,
+                UserImage = p.User.UserImage,
                 Bio = p.Bio,
                 Specialization = p.Specialization,
                 Experience = p.Experience,
@@ -81,6 +82,7 @@ namespace BusinessLayer.Services
                     Phonenumber = existedPsychiatrist.User.Phonenumber,
                     Address = existedPsychiatrist.User.Address,
                     Gender = existedPsychiatrist.User.Gender,
+                    UserImage = existedPsychiatrist.User.UserImage,
 
                     Bio = existedPsychiatrist.Bio,
                     Specialization = existedPsychiatrist.Specialization,
@@ -158,6 +160,7 @@ namespace BusinessLayer.Services
             existedPsychiatrist.User.Phonenumber = request.Phonenumber ?? existedPsychiatrist.User.Phonenumber;
             existedPsychiatrist.User.Address = request.Address ?? existedPsychiatrist.User.Address;
             existedPsychiatrist.User.Gender = request.Gender ?? existedPsychiatrist.User.Gender;
+            existedPsychiatrist.User.UserImage = request.UserImage ?? existedPsychiatrist.User.UserImage;
 
             existedPsychiatrist.Bio = request.Bio ?? existedPsychiatrist.Bio;
             existedPsychiatrist.Specialization = request.Specialization ?? existedPsychiatrist.Specialization;
@@ -178,6 +181,7 @@ namespace BusinessLayer.Services
                     Phonenumber = existedPsychiatrist.User.Phonenumber,
                     Address = existedPsychiatrist.User.Address,
                     Gender = existedPsychiatrist.User.Gender,
+                    UserImage = existedPsychiatrist.User.UserImage,
                     Bio = existedPsychiatrist.Bio,
                     Specialization = existedPsychiatrist.Specialization,
                     Experience = existedPsychiatrist.Experience,

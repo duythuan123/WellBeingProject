@@ -15,6 +15,7 @@ namespace BusinessLayer.Models.Response
         public string Phonenumber { get; set; }
         public string Address { get; set; }
         public string Gender { get; set; }
+        public string? UserImage { get; set; }
         public string Specialization { get; set; } = null!;
         public string? Bio { get; set; }
         public string? Experience { get; set; }
