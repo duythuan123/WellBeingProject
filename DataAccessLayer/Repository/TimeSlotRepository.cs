@@ -32,7 +32,6 @@ namespace DataAccessLayer.Repository
             return await _context.TimeSlots
                 .FirstOrDefaultAsync(ts => ts.StartTime == startTime 
                                         && ts.DateOfWeek == dateOfWeek 
-                                        && ts.SlotDate == slotDate
                                         && ts.PsychiatristId == psychiatristId);
         }
 

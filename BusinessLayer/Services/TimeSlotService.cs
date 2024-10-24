@@ -33,7 +33,6 @@ namespace BusinessLayer.Services
                 DateOfWeek = ts.DateOfWeek,
                 StartTime = ts.StartTime,
                 EndTime = ts.EndTime,
-                SlotDate = ts.SlotDate,
                 PsychiatristName = ts.Psychiatrist.User.Fullname,
             }).ToList();
 
@@ -65,7 +64,6 @@ namespace BusinessLayer.Services
                 TimeSlotId = timeSlot.TimeSlotId,
                 StartTime = timeSlot.StartTime,
                 EndTime = timeSlot.EndTime,
-                SlotDate = timeSlot.SlotDate,
                 DateOfWeek = timeSlot.DateOfWeek,
             };
 
