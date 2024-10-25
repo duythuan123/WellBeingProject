@@ -20,5 +20,7 @@ namespace BusinessLayer.Models.Response
         public string? Bio { get; set; }
         public string? Experience { get; set; }
         public string? Location { get; set; }
+
+        public List<TimeSlotResponseModel> TimeSlots { get; set; }
     }
 }

@@ -40,10 +40,18 @@ namespace BusinessLayer.Services
                 Address = p.User.Address,
                 Gender = p.User.Gender,
                 UserImage = p.User.UserImage,
+                
                 Bio = p.Bio,
                 Specialization = p.Specialization,
                 Experience = p.Experience,
-                Location = p.Location
+                Location = p.Location,
+
+                TimeSlots = p.TimeSlots.Select(t => new TimeSlotResponseModel
+                {
+                    StartTime = t.StartTime,
+                    EndTime = t.EndTime,
+                    DateOfWeek = t.DateOfWeek,
+                }).ToList() // Ánh xạ các time slot
             }).ToList();
 
             return new BaseResponseModel<IEnumerable<PsychiatristResponseModel>>
@@ -87,7 +95,14 @@ namespace BusinessLayer.Services
                     Bio = existedPsychiatrist.Bio,
                     Specialization = existedPsychiatrist.Specialization,
                     Experience = existedPsychiatrist.Experience,
-                    Location = existedPsychiatrist.Location
+                    Location = existedPsychiatrist.Location,
+
+                    TimeSlots = existedPsychiatrist.TimeSlots.Select(t => new TimeSlotResponseModel
+                    {
+                        StartTime = t.StartTime,
+                        EndTime = t.EndTime,
+                        DateOfWeek = t.DateOfWeek,
+                    }).ToList()
                 },
             };
         }

@@ -23,6 +23,7 @@ namespace DataAccessLayer.Repository
         {
             return await _context.Psychiatrists
                 .Include(p => p.User) // Bao gồm thông tin người dùng nếu cần
+                .Include(p => p.TimeSlots) // Bao gồm danh sách time slot
                 .ToListAsync(); // Lấy tất cả bác sĩ tâm lý
         }
 
@@ -35,6 +36,7 @@ namespace DataAccessLayer.Repository
         {
             return await _context.Psychiatrists
                 .Include(p => p.User)
+                .Include(p => p.TimeSlots)
                 .FirstOrDefaultAsync(p => p.UserId == userId);
         }
 
