@@ -23,22 +23,22 @@ namespace DataAccessLayer.Repository
 
         public async Task<IEnumerable<Appointment>> GetAllAsync()
         {
-            return await _context.Appointments.ToListAsync();
+            return await _context.Appointments.Include(p => p.Psychiatrist).ToListAsync();
         }
 
         public async Task<Appointment> GetById(int id)
         {
-            return await _context.Appointments.FirstOrDefaultAsync(u => u.Id == id);
+            return await _context.Appointments.Include(p => p.Psychiatrist).FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task<IEnumerable<Appointment>> GetByUserId(int id)
         {
-            return await _context.Appointments.Where(u => u.UserId == id).ToListAsync();
+            return await _context.Appointments.Include(p => p.Psychiatrist).Where(p => p.UserId == id).ToListAsync();
         }
 
         public async Task<IEnumerable<Appointment>> GetByPsychiatristId(int id)
         {
-            return await _context.Appointments.Where(u => u.PsychiatristId == id).ToListAsync();
+            return await _context.Appointments.Include(p => p.Psychiatrist).Where(p => p.PsychiatristId == id).ToListAsync();
         }
 
         public async Task AddAsync(Appointment appointment)
@@ -65,9 +65,14 @@ namespace DataAccessLayer.Repository
         {
             var existingAppointment = await _context.Appointments.FindAsync(id);
             var existingPayment = await _context.Payments.FindAsync(existingAppointment.PaymentId);
+            var existingTimeSlot = await _context.TimeSlots.FindAsync(existingAppointment.TimeSlotId);
 
             existingAppointment.PaymentId = null;
             _context.Entry(existingAppointment).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            existingTimeSlot.Status = TimeslotStatus.AVAILABLE.ToString();
+            _context.Entry(existingTimeSlot).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
             _context.Appointments.Remove(existingAppointment);

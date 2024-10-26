@@ -16,5 +16,7 @@ namespace BusinessLayer.Models.Response
         public int PsychiatristId { get; set; }
         public int? PaymentId { get; set; }
         public int? TimeSlotId { get; set; }
+        public string? Reason { get; set; }
+        public decimal? ConsultationFee { get; set; }
     }
 }

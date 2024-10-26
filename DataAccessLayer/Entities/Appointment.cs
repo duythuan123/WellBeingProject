@@ -18,6 +18,7 @@ namespace DataAccessLayer.Entities
         public int PsychiatristId { get; set; }
         public int? PaymentId { get; set; }
         public int? TimeSlotId { get; set; }
+        public string? Reason { get; set; }
 
         public virtual Payment? Payment { get; set; }
         public virtual Psychiatrist Psychiatrist { get; set; } = null!;

@@ -56,7 +56,6 @@ namespace WellMeetAPI.Controllers
         }
 
         [HttpPut("update/{id}")]
-        [Authorize]
         public async Task<IActionResult> update([FromBody] UserRequestModelForUpdate request, int id)
         {
             var result = await _userService.UpdateAsync(request,id);
