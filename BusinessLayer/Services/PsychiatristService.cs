@@ -33,6 +33,7 @@ namespace BusinessLayer.Services
 
             var response = psychiatrists.Select(p => new PsychiatristResponseModel
             {
+                Id = p.Id,
                 UserId = p.UserId,
                 Fullname = p.User.Fullname,
                 Email = p.User.Email,
@@ -85,6 +86,7 @@ namespace BusinessLayer.Services
                 Message = "Get psychiatrist detail success!",
                 Data = new PsychiatristResponseModel()
                 {
+                    Id = existedPsychiatrist.Id,
                     UserId = existedPsychiatrist.UserId,
                     Fullname = existedPsychiatrist.User.Fullname,
                     Email = existedPsychiatrist.User.Email,
