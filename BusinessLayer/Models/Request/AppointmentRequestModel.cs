@@ -17,6 +17,7 @@ namespace BusinessLayer.Models.Request
         public int PsychiatristId { get; set; }
         [DefaultValue("2")]
         public int? TimeSlotId { get; set; }
+        public string? Reason { get; set; }
     }
 
     public class AppointmentRequestModelForUpdate
@@ -28,6 +29,7 @@ namespace BusinessLayer.Models.Request
         public int UserId { get; set; }
         public int PsychiatristId { get; set; }
         public int? TimeSlotId { get; set; }
+        public string? Reason { get; set; }
     }
 
 }

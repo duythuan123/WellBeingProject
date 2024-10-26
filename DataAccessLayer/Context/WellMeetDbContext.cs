@@ -39,6 +39,8 @@ namespace DataAccessLayer.Context
             {
                 entity.ToTable("Appointment");
 
+                entity.Property(e => e.Reason).HasMaxLength(255);
+
                 entity.HasOne(d => d.Payment)
                     .WithMany(p => p.Appointments)
                     .HasForeignKey(d => d.PaymentId)

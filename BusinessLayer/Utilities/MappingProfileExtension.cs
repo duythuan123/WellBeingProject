@@ -22,10 +22,14 @@ namespace BusinessLayer.Utilities
                 .ForMember(dest => dest.Password, opt => opt.MapFrom(src => Helper.HashPassword(src.Password)))
                 .ForMember(dest => dest.Role, opt => opt.MapFrom(src => UserRole.USER.ToString()));
             CreateMap<UserRequestModelForUpdate, User>();
-            CreateMap<Appointment, AppointmentResponseModel>();
+            CreateMap<Appointment, AppointmentResponseModel>()
+                .ForMember(dest => dest.ConsultationFee, opt => opt.MapFrom(src => src.Psychiatrist.ConsultationFee));
+
             CreateMap<AppointmentRequestModel, Appointment>()
-                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => AppointmentStatus.CREATED.ToString()));
-            CreateMap<AppointmentRequestModelForUpdate, Appointment>();
+                .ForMember(dest => dest.BookingDate, opt => opt.MapFrom(src => DateTime.Now))
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => AppointmentStatus.CREATED.ToString()));
+            CreateMap<AppointmentRequestModelForUpdate, Appointment>()
+                .ForMember(dest => dest.BookingDate, opt => opt.MapFrom(src => DateTime.Now));
             CreateMap<PaymentResponseModel, Payment>()
             .ForMember(dest => dest.Amount, opt => opt.MapFrom(src => Helper.ExtractAmountFromOrderDescription(src.OrderDescription)))
             .ForMember(dest => dest.PaymentDate, opt => opt.MapFrom(src => DateTime.Now))
