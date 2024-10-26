@@ -50,6 +50,7 @@ namespace BusinessLayer.Services
 
                 TimeSlots = p.TimeSlots.Select(t => new TimeSlotResponseModel
                 {
+                    TimeSlotId = t.TimeSlotId,
                     StartTime = t.StartTime,
                     EndTime = t.EndTime,
                     DateOfWeek = t.DateOfWeek,
@@ -103,6 +104,7 @@ namespace BusinessLayer.Services
 
                     TimeSlots = existedPsychiatrist.TimeSlots.Select(t => new TimeSlotResponseModel
                     {
+                        TimeSlotId = t.TimeSlotId,
                         StartTime = t.StartTime,
                         EndTime = t.EndTime,
                         DateOfWeek = t.DateOfWeek,
