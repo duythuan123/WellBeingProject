@@ -14,8 +14,8 @@ namespace DataAccessLayer.Entities
         public TimeSpan StartTime { get; set; }
         public TimeSpan EndTime { get; set; }
         public int? PsychiatristId { get; set; }
-        public string? DateOfWeek { get; set; }
         public string? Status { get; set; }
+        public DateTime? SlotDate { get; set; }
 
         public virtual Psychiatrist? Psychiatrist { get; set; }
         public virtual ICollection<Appointment> Appointments { get; set; }

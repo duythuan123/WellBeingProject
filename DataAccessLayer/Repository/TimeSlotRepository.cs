@@ -27,11 +27,11 @@ namespace DataAccessLayer.Repository
                    .ToListAsync();
         }
 
-        public async Task<TimeSlot> GetTimeSlotByDetailsAsync(TimeSpan startTime, string dateOfWeek, DateTime slotDate, int psychiatristId)
+        public async Task<TimeSlot> GetTimeSlotByDetailsAsync(TimeSpan startTime, DateTime slotDate, int psychiatristId)
         {
             return await _context.TimeSlots
                 .FirstOrDefaultAsync(ts => ts.StartTime == startTime 
-                                        && ts.DateOfWeek == dateOfWeek 
+                                        && ts.SlotDate == slotDate
                                         && ts.PsychiatristId == psychiatristId);
         }
 

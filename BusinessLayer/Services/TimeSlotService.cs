@@ -30,9 +30,9 @@ namespace BusinessLayer.Services
 
             var response = timeslots.Select(ts => new TimeSlotResponseModel
             {
-                DateOfWeek = ts.DateOfWeek,
                 StartTime = ts.StartTime,
                 EndTime = ts.EndTime,
+                SlotDate = ts.SlotDate,
                 PsychiatristName = ts.Psychiatrist.User.Fullname,
             }).ToList();
 
@@ -64,7 +64,7 @@ namespace BusinessLayer.Services
                 TimeSlotId = timeSlot.TimeSlotId,
                 StartTime = timeSlot.StartTime,
                 EndTime = timeSlot.EndTime,
-                DateOfWeek = timeSlot.DateOfWeek,
+                SlotDate = timeSlot.SlotDate,
             };
 
             return new BaseResponseModel<TimeSlotModel>
@@ -92,7 +92,7 @@ namespace BusinessLayer.Services
             }
 
             // Kiểm tra xem có TimeSlot nào trùng không
-            var existingTimeSlot = await _tsRepo.GetTimeSlotByDetailsAsync(request.StartTime, request.DateOfWeek, request.SlotDate, psychiatristId);
+            var existingTimeSlot = await _tsRepo.GetTimeSlotByDetailsAsync(request.StartTime, request.SlotDate, psychiatristId);
             if (existingTimeSlot != null)
             {
                 return new BaseResponseModel<TimeSlotResponseModel>
@@ -108,7 +108,7 @@ namespace BusinessLayer.Services
             {
                 StartTime = request.StartTime,
                 EndTime = request.EndTime,
-                DateOfWeek = request.DateOfWeek,
+                SlotDate = request.SlotDate,
                 PsychiatristId = psychiatristId
             };
 
@@ -123,7 +123,7 @@ namespace BusinessLayer.Services
                 {
                     StartTime = newTimeSlot.StartTime,
                     EndTime = newTimeSlot.EndTime,
-                    DateOfWeek = newTimeSlot.DateOfWeek
+                    SlotDate = newTimeSlot.SlotDate
                 }
             };
         }
@@ -147,7 +147,7 @@ namespace BusinessLayer.Services
             // Cập nhật giá trị mới cho TimeSlot
             timeSlot.StartTime = request.StartTime;
             timeSlot.EndTime = request.EndTime;
-            timeSlot.DateOfWeek = request.DateOfWeek;
+            timeSlot.SlotDate = request.SlotDate;
 
             // Lưu thay đổi vào cơ sở dữ liệu
             await _tsRepo.UpdateTimeSlotAsync(timeSlot);
@@ -160,7 +160,7 @@ namespace BusinessLayer.Services
                 {
                     StartTime = timeSlot.StartTime,
                     EndTime = timeSlot.EndTime,
-                    DateOfWeek = timeSlot.DateOfWeek,
+                    SlotDate = timeSlot.SlotDate,
                 }
             };
         }

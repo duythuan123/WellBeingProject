@@ -53,7 +53,7 @@ namespace BusinessLayer.Services
                     TimeSlotId = t.TimeSlotId,
                     StartTime = t.StartTime,
                     EndTime = t.EndTime,
-                    DateOfWeek = t.DateOfWeek,
+                    SlotDate = t.SlotDate,
                 }).ToList() // Ánh xạ các time slot
             }).ToList();
 
@@ -107,7 +107,7 @@ namespace BusinessLayer.Services
                         TimeSlotId = t.TimeSlotId,
                         StartTime = t.StartTime,
                         EndTime = t.EndTime,
-                        DateOfWeek = t.DateOfWeek,
+                        SlotDate = t.SlotDate,
                     }).ToList()
                 },
             };
