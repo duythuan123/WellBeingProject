@@ -34,9 +34,9 @@ namespace WellMeetAPI.Controllers
 
         [HttpPut("update/{userId}")]
         [Authorize]
-        public async Task<IActionResult> UpdatePsychiatristProfile([FromBody] PsychiatristRequestModelForUpdate request, int id)
+        public async Task<IActionResult> UpdatePsychiatristProfile([FromBody] PsychiatristRequestModelForUpdate request, int userId)
         {
-            var result = await _pService.UpdatePsychiatristAsync(request, id);
+            var result = await _pService.UpdatePsychiatristAsync(request, userId);
 
             return StatusCode((int)result.Code, result);
         }

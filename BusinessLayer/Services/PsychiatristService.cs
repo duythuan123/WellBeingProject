@@ -33,6 +33,7 @@ namespace BusinessLayer.Services
 
             var response = psychiatrists.Select(p => new PsychiatristResponseModel
             {
+                UserId = p.UserId,
                 Fullname = p.User.Fullname,
                 Email = p.User.Email,
                 DateOfBirth = p.User.DateOfBirth,
@@ -84,6 +85,7 @@ namespace BusinessLayer.Services
                 Message = "Get psychiatrist detail success!",
                 Data = new PsychiatristResponseModel()
                 {
+                    UserId = existedPsychiatrist.UserId,
                     Fullname = existedPsychiatrist.User.Fullname,
                     Email = existedPsychiatrist.User.Email,
                     DateOfBirth = existedPsychiatrist.User.DateOfBirth,
@@ -172,6 +174,9 @@ namespace BusinessLayer.Services
 
             existedPsychiatrist.User.Fullname = request.Fullname ?? existedPsychiatrist.User.Fullname;
             existedPsychiatrist.User.Email = request.Email ?? existedPsychiatrist.User.Email;
+            existedPsychiatrist.User.DateOfBirth = request.DateOfBirth != default 
+                ? request.DateOfBirth
+                : existedPsychiatrist.User.DateOfBirth;
             existedPsychiatrist.User.Phonenumber = request.Phonenumber ?? existedPsychiatrist.User.Phonenumber;
             existedPsychiatrist.User.Address = request.Address ?? existedPsychiatrist.User.Address;
             existedPsychiatrist.User.Gender = request.Gender ?? existedPsychiatrist.User.Gender;
