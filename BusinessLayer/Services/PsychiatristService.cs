@@ -1,19 +1,8 @@
 ﻿using BusinessLayer.IServices;
 using BusinessLayer.Models.Request;
 using BusinessLayer.Models.Response;
-using BusinessLayer.Utilities;
-using DataAccessLayer.Entities;
 using DataAccessLayer.IRepository;
-using DataAccessLayer.Repository;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace BusinessLayer.Services
 {

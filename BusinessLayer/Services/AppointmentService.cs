@@ -2,17 +2,9 @@
 using BusinessLayer.IServices;
 using BusinessLayer.Models.Request;
 using BusinessLayer.Models.Response;
-using BusinessLayer.Utilities;
 using DataAccessLayer.Entities;
 using DataAccessLayer.Enums;
 using DataAccessLayer.IRepository;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BusinessLayer.Services
 {

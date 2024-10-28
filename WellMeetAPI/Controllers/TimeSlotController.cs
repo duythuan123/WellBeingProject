@@ -1,7 +1,6 @@
 ﻿using BusinessLayer.IServices;
 using BusinessLayer.Models.Request;
 using BusinessLayer.Models.Response;
-using BusinessLayer.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WellMeetAPI.Controllers
