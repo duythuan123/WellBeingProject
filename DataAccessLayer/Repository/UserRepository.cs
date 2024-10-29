@@ -1,5 +1,6 @@
 ﻿using DataAccessLayer.Context;
 using DataAccessLayer.Entities;
+using DataAccessLayer.Enums;
 using DataAccessLayer.IRepository;
 using Microsoft.EntityFrameworkCore;
 
@@ -90,6 +91,25 @@ namespace DataAccessLayer.Repository
             return await _context.Users.ToListAsync();
         }
 
+        public async Task<int> GetTotalAccount()
+        {
+            // Get the total number of users
+            return  await _context.Users.CountAsync();
+        }
+
+        public async Task<double> GetTotalRevenue()
+        {
+            // Calculate total revenue from payments
+            return (double)await _context.Payments
+                .Where(p => p.PaymentStatus == PaymentStatus.SUCCESS.ToString())
+                .SumAsync(p => p.Amount ?? 0);
+        }
+
+        public async Task<int> GetTotalAppointments()
+        {
+            // Get the total number of appointments
+            return await _context.Appointments.CountAsync();
+        }
 
     }
 }

@@ -13,5 +13,6 @@ namespace BusinessLayer.IServices
         Task<BaseResponseModel<UserResponseModel>> GetDetailAsync(int id);
         Task<BaseResponseModel> ForgotPasswordAsync(string email);
         Task<BaseResponseModel> ResetPasswordAsync(string token, string newPassword);
+        Task<BaseResponseModel<DashboardResponseModel>> GetDashBoard();
     }
 }

@@ -13,5 +13,8 @@ namespace DataAccessLayer.IRepository
         Task SavePasswordResetTokenAsync(User user, string token, DateTime expiration);
         Task<User> GetUserByPasswordResetTokenAsync(string token);
         Task UpdatePasswordAsync(User user, int id);
+        Task<int> GetTotalAccount();
+        Task<double> GetTotalRevenue();
+        Task<int> GetTotalAppointments();
     }
 }

@@ -77,5 +77,13 @@ namespace WellMeetAPI.Controllers
             var result = await _userService.DeleteAsync(id);
             return StatusCode((int)result.Code, result);
         }
+
+        [HttpGet("GetDashBoard")]
+        public async Task<IActionResult> getDashboard()
+        {
+            var result = await _userService.GetDashBoard();
+
+            return StatusCode((int)result.Code, result);
+        }
     }
 }

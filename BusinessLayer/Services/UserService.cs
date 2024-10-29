@@ -272,5 +272,26 @@ namespace BusinessLayer.Services
                 Message = "User is Deleted Successfully",
             };
         }
+
+        public async Task<BaseResponseModel<DashboardResponseModel>> GetDashBoard()
+        {
+            var totalAccounts = await _repo.GetTotalAccount();
+            var totalRevenue = await _repo.GetTotalRevenue();
+            var totalAppointments = await _repo.GetTotalAppointments();
+
+            var dashboard = new DashboardResponseModel
+            {
+                TotalAccount = totalAccounts,
+                TotalAppointments = totalAppointments,
+                TotalRevenue = (double)totalRevenue
+            };
+
+            return new BaseResponseModel<DashboardResponseModel>
+            {
+                Code = 200,
+                Message = "Get Dashboard Detail Success",
+                Data = dashboard
+            };
+        }
     }
 }
