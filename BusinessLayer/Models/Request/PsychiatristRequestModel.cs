@@ -22,6 +22,7 @@ namespace BusinessLayer.Models.Request
         public string Address { get; set; }
         public string Gender { get; set; }
         public string? UserImage { get; set; }
+        public decimal? ConsultationFee { get; set; }
         public string Specialization { get; set; } = null!;
         public string? Bio { get; set; }
         public string? Experience { get; set; }

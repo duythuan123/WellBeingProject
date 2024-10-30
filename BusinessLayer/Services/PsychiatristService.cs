@@ -36,6 +36,7 @@ namespace BusinessLayer.Services
                 Specialization = p.Specialization,
                 Experience = p.Experience,
                 Location = p.Location,
+                ConsultationFee = p.ConsultationFee,
 
                 TimeSlots = p.TimeSlots.Select(t => new TimeSlotResponseModel
                 {
@@ -90,6 +91,7 @@ namespace BusinessLayer.Services
                     Specialization = existedPsychiatrist.Specialization,
                     Experience = existedPsychiatrist.Experience,
                     Location = existedPsychiatrist.Location,
+                    ConsultationFee = existedPsychiatrist.ConsultationFee,
 
                     TimeSlots = existedPsychiatrist.TimeSlots.Select(t => new TimeSlotResponseModel
                     {
@@ -179,6 +181,7 @@ namespace BusinessLayer.Services
             existedPsychiatrist.Specialization = request.Specialization ?? existedPsychiatrist.Specialization;
             existedPsychiatrist.Experience = request.Experience ?? existedPsychiatrist.Experience;
             existedPsychiatrist.Location = request.Location ?? existedPsychiatrist.Location;
+            existedPsychiatrist.ConsultationFee = request.ConsultationFee ?? existedPsychiatrist.ConsultationFee;
 
             await _pRepo.UpdatePsychiatristAsync(existedPsychiatrist, userId);
             
@@ -198,7 +201,8 @@ namespace BusinessLayer.Services
                     Bio = existedPsychiatrist.Bio,
                     Specialization = existedPsychiatrist.Specialization,
                     Experience = existedPsychiatrist.Experience,
-                    Location = existedPsychiatrist.Location
+                    Location = existedPsychiatrist.Location,
+                    ConsultationFee = existedPsychiatrist.ConsultationFee
                 }
             };
         }

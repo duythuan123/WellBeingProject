@@ -15,6 +15,7 @@
         public string? Bio { get; set; }
         public string? Experience { get; set; }
         public string? Location { get; set; }
+        public decimal? ConsultationFee { get; set; }
 
         public List<TimeSlotResponseModel> TimeSlots { get; set; }
     }
