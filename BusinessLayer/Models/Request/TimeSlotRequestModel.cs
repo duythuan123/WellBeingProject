@@ -8,6 +8,14 @@
         public DateTime SlotDate { get; set; }
     }
 
+    public class AddTimeSlotRequestModel
+    {
+        public TimeSpan StartTime { get; set; }
+        public TimeSpan EndTime { get; set; }
+        public DateTime SlotDate { get; set; }
+        public string? Status { get; set; }
+    }
+
     public class TimeSlotRequestModelForUpdate
     {
         public int TimeSlotId { get; set; }

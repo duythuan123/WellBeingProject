@@ -70,13 +70,15 @@ namespace BusinessLayer.Services
 
         //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        public async Task<BaseResponseModel<TimeSlotResponseModel>> AddTimeSlotAsync(TimeSlotRequestModel request, int psychiatristId)
+        public async Task<BaseResponseModel<List<AddTimeSlotResponseModel>>> AddTimeSlotAsync(AddTimeSlotRequestModel request, int psychiatristId)
         {
+            var responseList = new List<AddTimeSlotResponseModel>();
+
             // Kiểm tra xem psychiatrist có tồn tại không
             var existedPsychiatrist = await _tsRepo.GetTimeSlotByIdAsync(psychiatristId);
             if (existedPsychiatrist == null)
             {
-                return new BaseResponseModel<TimeSlotResponseModel>
+                return new BaseResponseModel<List<AddTimeSlotResponseModel>>
                 {
                     Code = 500,
                     Message = "Psychiatrist not exists!",
@@ -84,42 +86,47 @@ namespace BusinessLayer.Services
                 };
             }
 
-            // Kiểm tra xem có TimeSlot nào trùng không
-            var existingTimeSlot = await _tsRepo.GetTimeSlotByDetailsAsync(request.StartTime, request.SlotDate, psychiatristId);
-            if (existingTimeSlot != null)
+            // Loop để tạo TimeSlot cho 30 ngày tiếp theo
+            for (int i = 0; i < 30; i++)
             {
-                return new BaseResponseModel<TimeSlotResponseModel>
+                var currentSlotDate = request.SlotDate.AddDays(i);
+
+                // Kiểm tra trùng lặp TimeSlot
+                var existingTimeSlot = await _tsRepo.GetTimeSlotByDetailsAsync(request.StartTime, currentSlotDate, psychiatristId);
+                if (existingTimeSlot == null)
                 {
-                    Code = 400,
-                    Message = "Time slot already exists for this psychiatrist at the specified time and day.",
-                    Data = null
-                };
+                    // Tạo mới TimeSlot với Status là "AVAILABLE"
+                    var newTimeSlot = new TimeSlot
+                    {
+                        StartTime = request.StartTime,
+                        EndTime = request.EndTime,
+                        SlotDate = currentSlotDate,
+                        PsychiatristId = psychiatristId,
+                        Status = "AVAILABLE"
+                    };
+
+                    // Thêm TimeSlot vào database
+                    await _tsRepo.AddTimeSlotAsync(newTimeSlot);
+
+                    // Thêm vào response list
+                    responseList.Add(new AddTimeSlotResponseModel
+                    {
+                        StartTime = newTimeSlot.StartTime,
+                        EndTime = newTimeSlot.EndTime,
+                        SlotDate = newTimeSlot.SlotDate,
+                        Status = newTimeSlot.Status
+                    });
+                }
             }
 
-            // Tạo đối tượng TimeSlot mới
-            var newTimeSlot = new TimeSlot
-            {
-                StartTime = request.StartTime,
-                EndTime = request.EndTime,
-                SlotDate = request.SlotDate,
-                PsychiatristId = psychiatristId
-            };
-
-            // Thêm TimeSlot vào cơ sở dữ liệu
-            await _tsRepo.AddTimeSlotAsync(newTimeSlot);
-
-            return new BaseResponseModel<TimeSlotResponseModel>
+            return new BaseResponseModel<List<AddTimeSlotResponseModel>>
             {
                 Code = 200,
-                Message = "Time slot created successfully.",
-                Data = new TimeSlotResponseModel
-                {
-                    StartTime = newTimeSlot.StartTime,
-                    EndTime = newTimeSlot.EndTime,
-                    SlotDate = newTimeSlot.SlotDate
-                }
+                Message = "Time slots created successfully for the next 30 days.",
+                Data = responseList
             };
         }
+
 
         //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         public async Task<BaseResponseModel<TimeSlotResponseModel>> UpdateTimeSlotAsync(TimeSlotRequestModel request, int timeSlotId)
