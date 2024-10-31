@@ -51,11 +51,13 @@ namespace BusinessLayer.Services
                 };
             }
 
+            var existedAppointment = await _repo.GetById(newAppointment.Id);
+
             return new BaseResponseModel<AppointmentResponseModel>
             {
                 Code = 200,
                 Message = "Appointment Created Success",
-                Data = _mapper.Map<AppointmentResponseModel>(newAppointment)
+                Data = _mapper.Map<AppointmentResponseModel>(existedAppointment)
             };
         }
 
