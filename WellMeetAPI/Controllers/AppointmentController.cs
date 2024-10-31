@@ -1,7 +1,9 @@
 ﻿using BusinessLayer.IServices;
 using BusinessLayer.Models.Request;
 using BusinessLayer.Models.Response;
+using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace WellMeetAPI.Controllers
 {
@@ -88,22 +90,26 @@ namespace WellMeetAPI.Controllers
         {
             var url = _vnPayService.CreatePaymentUrl(model, HttpContext);
 
-            return Ok(url);
+            return Ok(new { paymentUrl = url });
         }
+
+
         [HttpGet("paymentexcute")]
-        public IActionResult PaymentCallback()
+        public async Task<IActionResult> PaymentCallback()
         {
             var response = _vnPayService.PaymentExecute(Request.Query);
 
-            return Ok(response);
-        }
+            var result = await _vnPayService.AddPaymentAsync(response);
 
-        [HttpPost("addPayment")]
-        public async Task<IActionResult> createPayment(PaymentResponseModel request)
-        {
-            var result = await _vnPayService.AddPaymentAsync(request);
+            if (response.Success)
+            {
+                return Redirect("http://localhost:3000/payment-confirmation");
+            }
+            else
+            {
+                return Redirect("http://localhost:3000/doctor");
+            }
 
-            return StatusCode((int)result.Code, result);
         }
     }
 }
