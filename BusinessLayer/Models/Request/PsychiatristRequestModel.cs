@@ -1,16 +1,16 @@
-﻿using DataAccessLayer.Entities;
+﻿using BusinessLayer.Models.Response;
+using DataAccessLayer.Entities;
 
 namespace BusinessLayer.Models.Request
 {
     public class PsychiatristRequestModel
     {
         public string Specialization { get; set; } = null!;
-        public int? UserId { get; set; }
         public string? Bio { get; set; }
         public string? Experience { get; set; }
         public string? Location { get; set; }
-
-        public virtual User? User { get; set; }
+        public decimal? ConsultationFee { get; set; }
+        public UserRequestModel User { get; set; }
     }
 
     public class PsychiatristRequestModelForUpdate

@@ -9,6 +9,7 @@ namespace DataAccessLayer.IRepository
         Task<Psychiatrist> GetPsychiatristByUserId(int userId);
         Task<Psychiatrist> GetPsychiatristByEmail(string email);
         Task<Psychiatrist> GetPsychiatristByPhoneNumber(string phoneNumber);
+        Task AddAsync(Psychiatrist psychiatrist);
         Task UpdatePsychiatristAsync(Psychiatrist psychiatrist, int userId);
     }
 }

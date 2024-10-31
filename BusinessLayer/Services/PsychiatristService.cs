@@ -1,18 +1,24 @@
-﻿using BusinessLayer.IServices;
+﻿using AutoMapper;
+using BusinessLayer.IServices;
 using BusinessLayer.Models.Request;
 using BusinessLayer.Models.Response;
+using DataAccessLayer.Entities;
 using DataAccessLayer.IRepository;
 using System.Text.RegularExpressions;
+using UberSystem.Domain.Enums;
 
 namespace BusinessLayer.Services
 {
     public class PsychiatristService : IPsychiatristService
     {
         private readonly IPsychiatristRepository _pRepo;
-
-        public PsychiatristService(IPsychiatristRepository repo)
+        private readonly IUserRepository _uRepo;
+        private readonly IMapper _mapper;
+        public PsychiatristService(IPsychiatristRepository repo, IUserRepository uRepo, IMapper mapper)
         {
             _pRepo = repo;
+            _uRepo = uRepo;
+            _mapper = mapper;
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -203,6 +209,76 @@ namespace BusinessLayer.Services
                     Experience = existedPsychiatrist.Experience,
                     Location = existedPsychiatrist.Location,
                     ConsultationFee = existedPsychiatrist.ConsultationFee
+                }
+            };
+        }
+
+        public async Task<BaseResponseModel<PsychiatristResponseModel>> AddPsychiatristAsync(PsychiatristRequestModel request)
+        {
+            var existedUser = await _uRepo.GetUserByEmailAsync(request.User.Email);
+            if (existedUser != null)
+            {
+                return new BaseResponseModel<PsychiatristResponseModel>
+                {
+                    Code = 400,
+                    Message = "User already exists",
+                    Data = null
+                };
+            }
+
+            var newUser = _mapper.Map<User>(request.User);
+            newUser.Role = UserRole.PSYCHIATRIST.ToString();
+
+            try
+            {
+                await _uRepo.AddUserAsync(newUser);
+
+                var createdUser = await _uRepo.GetUserByEmailAsync(newUser.Email);
+
+                var newPsychiatrist = new Psychiatrist
+                {
+                    UserId = createdUser.Id,
+                    Bio = request.Bio,
+                    Specialization = request.Specialization,
+                    Experience = request.Experience,
+                    Location = request.Location,
+                    ConsultationFee = request.ConsultationFee
+                };
+
+                await _pRepo.AddAsync(newPsychiatrist);
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponseModel<PsychiatristResponseModel>
+                {
+                    Code = 500,
+                    Message = ex.Message,
+                    Data = null
+                };
+            }
+
+            var createdPsychiatrist = await _pRepo.GetPsychiatristByEmail(newUser.Email);
+
+            return new BaseResponseModel<PsychiatristResponseModel>
+            {
+                Code = 200,
+                Message = "Psychiatrist Created Success",
+                Data = new PsychiatristResponseModel
+                {
+                    Id = createdPsychiatrist.Id,
+                    UserId = createdPsychiatrist.UserId,
+                    Fullname = createdPsychiatrist.User.Fullname,
+                    Email = createdPsychiatrist.User.Email,
+                    DateOfBirth = createdPsychiatrist.User.DateOfBirth,
+                    Phonenumber = createdPsychiatrist.User.Phonenumber,
+                    Address = createdPsychiatrist.User.Address,
+                    Gender = createdPsychiatrist.User.Gender,
+                    UserImage = createdPsychiatrist.User.UserImage,
+                    Bio = createdPsychiatrist.Bio,
+                    Specialization = createdPsychiatrist.Specialization,
+                    Experience = createdPsychiatrist.Experience,
+                    Location = createdPsychiatrist.Location,
+                    ConsultationFee = createdPsychiatrist.ConsultationFee
                 }
             };
         }
