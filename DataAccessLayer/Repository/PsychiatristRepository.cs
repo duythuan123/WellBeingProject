@@ -56,5 +56,10 @@ namespace DataAccessLayer.Repository
             await _context.SaveChangesAsync();
         }
 
+        public async Task AddAsync(Psychiatrist psychiatrist)
+        {
+            _context.Psychiatrists.Add(psychiatrist);
+            await _context.SaveChangesAsync();
+        }
     }
 }
