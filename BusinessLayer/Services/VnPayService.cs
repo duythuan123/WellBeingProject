@@ -23,8 +23,19 @@ namespace BusinessLayer.Services
             _repo = repo;
             _mapper = mapper;
         }
-        public string CreatePaymentUrl(PaymentInformationModel model, HttpContext context)
+        public async Task<string> CreatePaymentUrl(PaymentInformationModel model, HttpContext context)
         {
+            if (!int.TryParse(model.AppointmentId, out int appointmentId))
+            {
+                return "Invalid Appointment ID";
+            }
+
+            var existedAppointment = await _repo.GetById(appointmentId);
+            if (existedAppointment == null)
+            {
+                return "Appointment not exists";
+            }
+
             var timeZoneById = TimeZoneInfo.FindSystemTimeZoneById(_configuration["TimeZoneId"]);
             var timeNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZoneById);
             var tick = DateTime.Now.Ticks.ToString();
@@ -50,7 +61,7 @@ namespace BusinessLayer.Services
             return paymentUrl;
         }
 
-        public PaymentResponseModel PaymentExecute(IQueryCollection collections)
+        public async Task<PaymentResponseModel> PaymentExecute(IQueryCollection collections)
         {
             var pay = new VnPayLibrary();
 

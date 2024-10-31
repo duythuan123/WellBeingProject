@@ -86,9 +86,9 @@ namespace WellMeetAPI.Controllers
         }
 
         [HttpPost("pay")]
-        public IActionResult CreatePaymentUrl(PaymentInformationModel model)
+        public async Task<IActionResult> CreatePaymentUrl(PaymentInformationModel model)
         {
-            var url = _vnPayService.CreatePaymentUrl(model, HttpContext);
+            var url = await _vnPayService.CreatePaymentUrl(model, HttpContext);
 
             return Ok(new { paymentUrl = url });
         }
@@ -97,7 +97,7 @@ namespace WellMeetAPI.Controllers
         [HttpGet("paymentexcute")]
         public async Task<IActionResult> PaymentCallback()
         {
-            var response = _vnPayService.PaymentExecute(Request.Query);
+            var response = await _vnPayService.PaymentExecute(Request.Query);
 
             var result = await _vnPayService.AddPaymentAsync(response);
 

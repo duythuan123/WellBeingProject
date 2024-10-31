@@ -7,8 +7,8 @@ namespace BusinessLayer.IServices
 {
     public interface IVnPayService
     {
-        string CreatePaymentUrl(PaymentInformationModel model, HttpContext context);
-        PaymentResponseModel PaymentExecute(IQueryCollection collections);
+        Task<string> CreatePaymentUrl(PaymentInformationModel model, HttpContext context);
+        Task<PaymentResponseModel> PaymentExecute(IQueryCollection collections);
         Task<BaseResponseModel<PaymentResponseModel>> AddPaymentAsync(PaymentResponseModel request);
     }
 }

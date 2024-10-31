@@ -9,10 +9,12 @@ namespace BusinessLayer.Services
     public class TimeSlotService : ITimeSlotService
     {
         private readonly ITimeSlotRepository _tsRepo;
+        private readonly IPsychiatristRepository _pRepo;
 
-        public TimeSlotService(ITimeSlotRepository repo)
+        public TimeSlotService(ITimeSlotRepository repo, IPsychiatristRepository pRepo)
         {
             _tsRepo = repo;
+            _pRepo = pRepo;
         }
 
         //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -75,7 +77,7 @@ namespace BusinessLayer.Services
             var responseList = new List<AddTimeSlotResponseModel>();
 
             // Kiểm tra xem psychiatrist có tồn tại không
-            var existedPsychiatrist = await _tsRepo.GetTimeSlotByIdAsync(psychiatristId);
+            var existedPsychiatrist = await _pRepo.GetPsychiatristById(psychiatristId);
             if (existedPsychiatrist == null)
             {
                 return new BaseResponseModel<List<AddTimeSlotResponseModel>>
