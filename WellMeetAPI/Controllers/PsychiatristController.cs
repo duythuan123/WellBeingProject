@@ -46,5 +46,12 @@ namespace WellMeetAPI.Controllers
 
             return StatusCode((int)result.Code, result);
         }
+
+        [HttpDelete("delete/{userId}")]
+        public async Task<IActionResult> DeletePsychiatrist(int userId)
+        {
+            var result = await _pService.DeletePsychiatristAsync(userId);
+            return StatusCode((int)result.Code, result);
+        }
     }
 }

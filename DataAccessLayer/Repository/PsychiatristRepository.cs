@@ -61,5 +61,27 @@ namespace DataAccessLayer.Repository
             _context.Psychiatrists.Add(psychiatrist);
             await _context.SaveChangesAsync();
         }
+
+        public async Task DeletePsychiatristAsync(Psychiatrist psychiatrist)
+        {
+            // Remove related appointments first
+            var appointments = _context.Appointments.Where(a => a.PsychiatristId == psychiatrist.Id);
+            _context.Appointments.RemoveRange(appointments);
+
+            // Remove related time slots
+            var timeSlots = _context.TimeSlots.Where(t => t.PsychiatristId == psychiatrist.Id);
+            _context.TimeSlots.RemoveRange(timeSlots);
+
+            // Remove the psychiatrist
+            _context.Psychiatrists.Remove(psychiatrist);
+            
+            // Remove the associated user
+            if (psychiatrist.User != null)
+            {
+                _context.Users.Remove(psychiatrist.User);
+            }
+
+            await _context.SaveChangesAsync();
+        }
     }
 }

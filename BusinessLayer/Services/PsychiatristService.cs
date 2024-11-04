@@ -282,5 +282,41 @@ namespace BusinessLayer.Services
                 }
             };
         }
+
+        public async Task<BaseResponseModel<bool>> DeletePsychiatristAsync(int userId)
+        {
+            // Kiểm tra xem Psychiatrist có tồn tại không
+            var existedPsychiatrist = await _pRepo.GetPsychiatristByUserId(userId);
+            if (existedPsychiatrist == null)
+            {
+                return new BaseResponseModel<bool>
+                {
+                    Code = 404,
+                    Message = "Psychiatrist not found!",
+                    Data = false
+                };
+            }
+
+            try
+            {
+                await _pRepo.DeletePsychiatristAsync(existedPsychiatrist);
+                
+                return new BaseResponseModel<bool>
+                {
+                    Code = 200,
+                    Message = "Delete psychiatrist successfully!",
+                    Data = true
+                };
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponseModel<bool>
+                {
+                    Code = 500,
+                    Message = $"Error deleting psychiatrist: {ex.Message}",
+                    Data = false
+                };
+            }
+        }
     }
 }
