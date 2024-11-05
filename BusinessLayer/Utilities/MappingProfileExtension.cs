@@ -17,7 +17,12 @@ namespace BusinessLayer.Utilities
                 .ForMember(dest => dest.Role, opt => opt.MapFrom(src => UserRole.USER.ToString()));
             CreateMap<UserRequestModelForUpdate, User>();
             CreateMap<Appointment, AppointmentResponseModel>()
-                .ForMember(dest => dest.ConsultationFee, opt => opt.MapFrom(src => src.Psychiatrist.ConsultationFee));
+                .ForMember(dest => dest.ConsultationFee, opt => opt.MapFrom(src => src.Psychiatrist.ConsultationFee))
+                .ForMember(dest => dest.Fullname, opt => opt.MapFrom(src => src.User.Fullname))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.User.Email))
+                .ForMember(dest => dest.Phonenumber, opt => opt.MapFrom(src => src.User.Phonenumber))
+                .ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.TimeSlot.StartTime))
+                .ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => src.TimeSlot.EndTime));
 
             CreateMap<AppointmentRequestModel, Appointment>()
                 .ForMember(dest => dest.BookingDate, opt => opt.MapFrom(src => DateTime.Now))

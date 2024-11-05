@@ -18,22 +18,22 @@ namespace DataAccessLayer.Repository
 
         public async Task<IEnumerable<Appointment>> GetAllAsync()
         {
-            return await _context.Appointments.Include(p => p.Psychiatrist).ToListAsync();
+            return await _context.Appointments.Include(p => p.Psychiatrist).Include(p => p.User).Include(p => p.TimeSlot).ToListAsync();
         }
 
         public async Task<Appointment> GetById(int id)
         {
-            return await _context.Appointments.Include(p => p.Psychiatrist).FirstOrDefaultAsync(p => p.Id == id);
+            return await _context.Appointments.Include(p => p.Psychiatrist).Include(p => p.User).Include(p => p.TimeSlot).FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task<IEnumerable<Appointment>> GetByUserId(int id)
         {
-            return await _context.Appointments.Include(p => p.Psychiatrist).Where(p => p.UserId == id).ToListAsync();
+            return await _context.Appointments.Include(p => p.Psychiatrist).Include(p => p.User).Include(p => p.TimeSlot).Where(p => p.UserId == id).ToListAsync();
         }
 
         public async Task<IEnumerable<Appointment>> GetByPsychiatristId(int id)
         {
-            return await _context.Appointments.Include(p => p.Psychiatrist).Where(p => p.PsychiatristId == id).ToListAsync();
+            return await _context.Appointments.Include(p => p.Psychiatrist).Include(p => p.User).Include(p => p.TimeSlot).Where(p => p.PsychiatristId == id).ToListAsync();
         }
 
         public async Task AddAsync(Appointment appointment)
