@@ -72,12 +72,12 @@ namespace BusinessLayer.Services
 
         //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        public async Task<BaseResponseModel<List<AddTimeSlotResponseModel>>> AddTimeSlotAsync(AddTimeSlotRequestModel request, int psychiatristId)
+        public async Task<BaseResponseModel<List<AddTimeSlotResponseModel>>> AddTimeSlotAsync(AddTimeSlotRequestModel request, int userId)
         {
             var responseList = new List<AddTimeSlotResponseModel>();
 
-            // Kiểm tra xem psychiatrist có tồn tại không
-            var existedPsychiatrist = await _pRepo.GetPsychiatristById(psychiatristId);
+            // Kiểm tra xem psychiatrist có tồn tại không bằng UserId từ bảng Psychiatrist
+            var existedPsychiatrist = await _pRepo.GetPsychiatristByUserId(userId);
             if (existedPsychiatrist == null)
             {
                 return new BaseResponseModel<List<AddTimeSlotResponseModel>>
@@ -88,23 +88,31 @@ namespace BusinessLayer.Services
                 };
             }
 
-            // Loop để tạo TimeSlot cho 30 ngày tiếp theo
-            for (int i = 0; i < 30; i++)
+            // Xác định số ngày cần tạo dựa trên Status
+            int daysToCreate = request.Status == "AVAILABLE" ? 30 : 1;
+
+            // Loop để tạo TimeSlot theo số ngày đã xác định
+            for (int i = 0; i < daysToCreate; i++)
             {
                 var currentSlotDate = request.SlotDate.AddDays(i);
 
                 // Kiểm tra trùng lặp TimeSlot
-                var existingTimeSlot = await _tsRepo.GetTimeSlotByDetailsAsync(request.StartTime, currentSlotDate, psychiatristId);
+                var existingTimeSlot = await _tsRepo.GetTimeSlotByDetailsAsync(
+                    request.StartTime, 
+                    currentSlotDate, 
+                    existedPsychiatrist.Id
+                );
+
                 if (existingTimeSlot == null)
                 {
-                    // Tạo mới TimeSlot với Status là "AVAILABLE"
+                    // Tạo mới TimeSlot với Status từ request
                     var newTimeSlot = new TimeSlot
                     {
                         StartTime = request.StartTime,
                         EndTime = request.EndTime,
                         SlotDate = currentSlotDate,
-                        PsychiatristId = psychiatristId,
-                        Status = "AVAILABLE"
+                        PsychiatristId = existedPsychiatrist.Id,
+                        Status = request.Status  // Sử dụng Status từ request
                     };
 
                     // Thêm TimeSlot vào database
@@ -121,10 +129,14 @@ namespace BusinessLayer.Services
                 }
             }
 
+            string successMessage = request.Status == "AVAILABLE" 
+                ? "Time slots created successfully for the next 30 days."
+                : "Time slot created successfully for the specified day.";
+
             return new BaseResponseModel<List<AddTimeSlotResponseModel>>
             {
                 Code = 200,
-                Message = "Time slots created successfully for the next 30 days.",
+                Message = successMessage,
                 Data = responseList
             };
         }

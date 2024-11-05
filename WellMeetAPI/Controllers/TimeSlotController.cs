@@ -28,10 +28,10 @@ namespace WellMeetAPI.Controllers
             return StatusCode((int)response.Code, response);
         }
 
-        [HttpPost("{psychiatristId}")]
-        public async Task<IActionResult> AddTimeSlotController([FromBody] AddTimeSlotRequestModel request, int psychiatristId)
+        [HttpPost("{userId}")]
+        public async Task<IActionResult> AddTimeSlotController([FromBody] AddTimeSlotRequestModel request, int userId)
         {
-            var response = await _tsService.AddTimeSlotAsync(request, psychiatristId);
+            var response = await _tsService.AddTimeSlotAsync(request, userId);
             return StatusCode((int)response.Code, response);
         }
 
